@@ -873,15 +873,16 @@ export const EXPERIENCES: ExperienceItem[] = [
     role: 'Ingénieure de recherche — Jumeaux numériques',
     organization: 'ICAM (Institut Catholique d’Arts et Métiers)',
     location: 'Grand Paris Sud, France',
-    focus: 'Flask, MongoDB, API REST & Maintenance prédictive',
+    focus: 'Flask, MongoDB, ROS / Gazebo, API REST & Maintenance prédictive',
     summary:
-      'Développement d’applications web pour la recherche et mise en place d’un jumeau numérique appliqué à la maintenance prédictive.',
+      'Semestre de recherche appliquée à l’ICAM Grand Paris Sud consacré à la connexion entre simulation robotique, services web et maintenance prédictive pour les PME industrielles.',
     deliverables: [
-      'Applications web avec Flask, MongoDB et API REST.',
-      'Jumeau numérique orienté services pour la maintenance prédictive.',
-      'Environnement Git / Docker et rédaction de la documentation technique.',
+      'Conception et développement d’applications web de recherche avec Python, Flask, MongoDB et API REST.',
+      'Développement d’un jumeau numérique orienté services pour la maintenance prédictive, interfacé avec les simulations robotiques ROS et Gazebo.',
+      'Conteneurisation avec Docker, gestion de versions Git et rédaction de documentation technique pour assurer la reproductibilité des expériences.',
+      'Valorisation des travaux par la co-écriture d’un chapitre scientifique publié dans les actes de FAIM 2025 chez Springer Nature.',
     ],
-    stack: ['Python', 'Flask', 'MongoDB', 'API REST', 'Docker', 'Git'],
+    stack: ['Python', 'Flask', 'MongoDB', 'API REST', 'ROS', 'Gazebo', 'Docker', 'Git'],
   },
   {
     id: 'exp-eneo',
@@ -924,14 +925,16 @@ export const EXPERIENCES: ExperienceItem[] = [
     role: 'Diplôme d’ingénieur en informatique et management des systèmes d’information (Titre CTI)',
     organization: 'UCAC-ICAM',
     location: 'Douala, Cameroun & Grand Paris Sud, France',
-    focus: 'Génie logiciel, Systèmes d’information, IoT & Cloud',
+    focus: 'Génie logiciel, Architectures distribuées, IoT, Réseaux & Management SI',
     summary:
-      'Formation d’ingénieure CTI répartie entre le Cameroun et la France, prolongée par une expérience en Belgique.',
+      'Cycle ingénieur de 5 ans reconnu par la CTI, débuté à Douala puis poursuivi en France à l’ICAM Grand Paris Sud avant une mobilité Erasmus à l’UMONS (Belgique).',
     deliverables: [
-      'Coautrice d’un chapitre scientifique publié chez Springer (FAIM 2025).',
-      'Projets d’architecture logicielle (Supply Chain Docker) et de systèmes connectés.',
+      'Conception logicielle et architectures distribuées : réalisation de la plateforme Supply Chain multi-services (FastAPI, Flask, React, PostgreSQL + MongoDB, Docker Compose).',
+      'Systèmes d’information & qualité : modélisation relationnelle SQL / NoSQL, tests automatisés (pytest, JUnit, Postman, OpenAPI) et conduite de projets en Agile / Scrum.',
+      'Réseaux, Linux & systèmes connectés : administration Linux, protocoles séries / MQTT et obtention de la certification Cisco CCNA durant le cursus.',
+      'Recherche appliquée & valorisation scientifique : semestre de recherche à l’ICAM Grand Paris Sud et publication d’un chapitre chez Springer (FAIM 2025).',
     ],
-    stack: ['Python', 'Java', 'React', 'PostgreSQL', 'MongoDB', 'Docker', 'Agile / Scrum'],
+    stack: ['Python', 'FastAPI', 'Flask', 'Java', 'Spring Boot', 'React', 'PostgreSQL', 'MongoDB', 'Docker', 'Agile / Scrum'],
   },
 ];
 

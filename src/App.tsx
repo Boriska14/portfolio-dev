@@ -28,7 +28,7 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="min-h-screen bg-[#f2ede4] text-[#141414]">
+      <div className="min-h-screen bg-white text-[#1d1d1f]">
         <Navbar />
 
         <main>
