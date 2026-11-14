@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowLeft, ArrowRight, ArrowUpRight, Play } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, FileText, Play } from 'lucide-react';
 import { PROJECTS, ProjectCaseStudy, ProjectCategory } from '../data/portfolioData';
 import { ProjectArchitectureVisual } from './ProjectArchitectureVisual';
 import { RevealText } from './RevealText';
@@ -212,7 +212,13 @@ export function ProjectsSection({ onSelectProject }: ProjectsSectionProps) {
                         </p>
                       </div>
 
-                      <ProjectArchitectureVisual projectId={activeProject.id} variant="dark" />
+                      <ProjectArchitectureVisual
+                        projectId={activeProject.id}
+                        variant="dark"
+                        previewImage={activeProject.previewImage}
+                        liveUrl={activeProject.liveUrl}
+                        title={activeProject.title}
+                      />
 
                       <div
                         className={`border-t pt-4 font-mono text-xs ${
@@ -290,6 +296,18 @@ export function ProjectsSection({ onSelectProject }: ProjectsSectionProps) {
                             <ArrowUpRight className="h-3.5 w-3.5 text-[#f0674b]" aria-hidden="true" />
                           </a>
                         )}
+
+                        {activeProject.thesisPdfUrl && (
+                          <a
+                            href={activeProject.thesisPdfUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex min-h-[42px] items-center gap-1.5 rounded-lg bg-[#101012] px-4 py-2 text-xs font-semibold text-white transition-all duration-150 hover:-translate-y-0.5 hover:bg-neutral-800 whitespace-nowrap shrink-0"
+                          >
+                            <FileText className="h-3.5 w-3.5 text-[#f0674b]" aria-hidden="true" />
+                            Mémoire PDF
+                          </a>
+                        )}
                       </div>
                     </div>
                   </motion.article>
@@ -358,7 +376,13 @@ export function ProjectsSection({ onSelectProject }: ProjectsSectionProps) {
                     </p>
 
                     <div className="mt-4">
-                      <ProjectArchitectureVisual projectId={project.id} variant="light" />
+                      <ProjectArchitectureVisual
+                        projectId={project.id}
+                        variant="light"
+                        previewImage={project.previewImage}
+                        liveUrl={project.liveUrl}
+                        title={project.title}
+                      />
                     </div>
 
                     <p className="mt-4 text-sm leading-relaxed text-neutral-700">{project.summary}</p>
@@ -386,6 +410,17 @@ export function ProjectsSection({ onSelectProject }: ProjectsSectionProps) {
                         >
                           Voir le site
                           <ArrowUpRight className="h-3.5 w-3.5 text-[#f0674b]" aria-hidden="true" />
+                        </a>
+                      )}
+                      {project.thesisPdfUrl && (
+                        <a
+                          href={project.thesisPdfUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex min-h-[38px] items-center gap-1.5 rounded-lg bg-[#101012] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-neutral-800"
+                        >
+                          <FileText className="h-3.5 w-3.5 text-[#f0674b]" aria-hidden="true" />
+                          Mémoire
                         </a>
                       )}
                       <button

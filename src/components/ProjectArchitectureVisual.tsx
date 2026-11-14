@@ -1,13 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
+import { ArrowUpRight } from 'lucide-react';
 
 interface ProjectArchitectureVisualProps {
   projectId: string;
   variant?: 'dark' | 'light';
+  previewImage?: string;
+  liveUrl?: string;
+  title?: string;
 }
 
+const DEFAULT_SITE_IMAGES: Record<string, { src: string; url: string; alt: string }> = {
+  'wuendjo-travel': {
+    src: '/assets/sites/wuendjo.png',
+    url: 'https://wuendjo.vercel.app/',
+    alt: 'Capture d’écran de l’interface Wuendjo — organisation de voyage en groupe ou solo',
+  },
+  'mateconsulting-web': {
+    src: '/assets/sites/mateconsulting.png',
+    url: 'https://mateconsulting-pi.vercel.app/',
+    alt: 'Capture d’écran du site web MATE Consulting — gestion financière externalisée',
+  },
+  'creative-glitch-mag': {
+    src: '/assets/sites/creative-glitch.png',
+    url: 'https://creative-glitch.vercel.app/',
+    alt: 'Capture d’écran du magazine web GLITCH — média éditorial',
+  },
+  'zone-groupe-app': {
+    src: '/assets/sites/zone-groupe.png',
+    url: 'https://zone-groupe-sigma.vercel.app/',
+    alt: 'Capture d’écran de la boutique en ligne Zone Groupe — électronique et négociation directe',
+  },
+};
+
 const META_LABEL: Record<string, { place: string; domain: string }> = {
-  'umons-rail-edge-cloud': { place: 'Mons, Belgique', domain: 'Ferroviaire · Temps réel' },
+  'umons-track-sentry-vision': { place: 'Polytech Mons · UMONS', domain: 'Deep Learning · DualSightNet & RT-DETR' },
+  'umons-rail-edge-cloud': { place: 'Mons, Belgique', domain: 'Ferroviaire · Edge-to-Cloud' },
   'aquasafe-minerve': { place: 'Cameroun · MINEE', domain: 'Cartographie & Eau' },
   'eneo-rapprochement': { place: 'Douala · ENEO', domain: 'Réconciliation des ventes' },
   'digital-twin-predictive': { place: 'Grand Paris Sud · ICAM', domain: 'Jumeau numérique' },
@@ -19,13 +47,17 @@ const META_LABEL: Record<string, { place: string; domain: string }> = {
   'jeffrey-assistant': { place: 'Projet personnel', domain: 'Assistant personnel' },
   'mateconsulting-web': { place: 'mateconsulting-pi.vercel.app', domain: 'Gestion financière' },
   'creative-glitch-mag': { place: 'creative-glitch.vercel.app', domain: 'Magazine web' },
-  'zone-groupe-app': { place: 'zone-groupe-sigma.vercel.app', domain: 'Plateforme web' },
+  'zone-groupe-app': { place: 'zone-groupe-sigma.vercel.app', domain: 'E-commerce · Négociation' },
 };
 
 export function ProjectArchitectureVisual({
   projectId,
   variant = 'dark',
+  previewImage,
+  liveUrl,
+  title,
 }: ProjectArchitectureVisualProps) {
+  const [imgError, setImgError] = useState(false);
   const isDark = variant === 'dark';
   const strokeLine = isDark ? 'rgba(255,255,255,0.42)' : 'rgba(16,16,18,0.34)';
   const strokeStrong = isDark ? '#ffffff' : '#101012';
@@ -34,8 +66,121 @@ export function ProjectArchitectureVisual({
   const accentFill = isDark ? '#e8563a' : '#e04628';
   const meta = META_LABEL[projectId] ?? { place: 'Projet', domain: 'Réalisation' };
 
+  const sitePreview = DEFAULT_SITE_IMAGES[projectId];
+  const resolvedSrc = previewImage || sitePreview?.src;
+  const resolvedUrl = liveUrl || sitePreview?.url;
+  const resolvedAlt =
+    sitePreview?.alt || (title ? `Aperçu de l’interface ${title}` : `Aperçu de l’interface ${meta.place}`);
+
+  if (resolvedSrc && !imgError) {
+    const cleanHost = resolvedUrl
+      ? resolvedUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')
+      : meta.place;
+
+    return (
+      <div
+        className={`w-full overflow-hidden rounded-lg border ${
+          isDark
+            ? 'border-white/15 bg-[#101012]/60'
+            : 'border-[#141414]/15 bg-[#f2ede4]/70'
+        }`}
+      >
+        {/* Minimalist browser top chrome */}
+        <div
+          className={`flex items-center justify-between gap-2 border-b px-3 py-1.5 font-mono text-[10px] ${
+            isDark
+              ? 'border-white/12 bg-[#161619] text-neutral-300'
+              : 'border-[#141414]/10 bg-white text-neutral-600'
+          }`}
+        >
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="inline-flex gap-1 shrink-0" aria-hidden="true">
+              <span className="h-2 w-2 rounded-full bg-[#e04628]" />
+              <span className="h-2 w-2 rounded-full bg-neutral-400/60" />
+              <span className="h-2 w-2 rounded-full bg-neutral-400/40" />
+            </span>
+            <span className="ml-1.5 truncate">{cleanHost}</span>
+          </div>
+
+          {resolvedUrl && (
+            <a
+              href={resolvedUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Ouvrir ${cleanHost} dans un nouvel onglet`}
+              className={`inline-flex items-center gap-0.5 shrink-0 font-semibold transition-colors ${
+                isDark ? 'text-[#ffd0c4] hover:text-white' : 'text-[#c4381e] hover:text-[#101012]'
+              }`}
+            >
+              En ligne
+              <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+            </a>
+          )}
+        </div>
+
+        {/* Captured Live Interface Image */}
+        <div className="group relative aspect-[16/10] w-full overflow-hidden bg-neutral-900">
+          <img
+            src={resolvedSrc}
+            alt={resolvedAlt}
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            onError={() => setImgError(true)}
+            className="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+          />
+        </div>
+
+        <div className="flex items-center justify-between border-t border-current/10 px-3 py-2 font-mono text-[10px]">
+          <span className={isDark ? 'text-white/70' : 'text-neutral-600'}>Interface en ligne</span>
+          <span className={isDark ? 'text-[#ffd0c4]' : 'text-[#c4381e]'}>{meta.domain}</span>
+        </div>
+      </div>
+    );
+  }
+
   const renderArtwork = (): React.ReactNode => {
     switch (projectId) {
+      case 'umons-track-sentry-vision':
+        return (
+          <svg
+            viewBox="0 0 420 170"
+            className="h-full w-full"
+            role="img"
+            aria-label="Illustration de vision par ordinateur ferroviaire DualSightNet et RT-DETR"
+          >
+            {/* Track vanishing rails */}
+            <line x1="76" y1="152" x2="188" y2="34" stroke={strokeLine} strokeWidth="1.6" />
+            <line x1="344" y1="152" x2="232" y2="34" stroke={strokeLine} strokeWidth="1.6" />
+            {/* Risk zone frames */}
+            <motion.rect
+              x="148"
+              y="52"
+              width="124"
+              height="74"
+              rx="2"
+              fill="none"
+              stroke={accentFill}
+              strokeWidth="2"
+              strokeDasharray="6 3"
+              initial={{ opacity: 0.4, scale: 0.96 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            />
+            {/* Corner reticles */}
+            <path d="M142 64 V46 H160" fill="none" stroke={strokeStrong} strokeWidth="2" />
+            <path d="M278 64 V46 H260" fill="none" stroke={strokeStrong} strokeWidth="2" />
+            <path d="M142 114 V132 H160" fill="none" stroke={strokeStrong} strokeWidth="2" />
+            <path d="M278 114 V132 H260" fill="none" stroke={strokeStrong} strokeWidth="2" />
+            {/* Dual branch fusion nodes */}
+            <circle cx="84" cy="88" r="14" fill="none" stroke={strokeStrong} strokeWidth="1.6" />
+            <circle cx="336" cy="88" r="14" fill="none" stroke={accent} strokeWidth="1.6" />
+            <line x1="98" y1="88" x2="148" y2="88" stroke={strokeLine} strokeWidth="1.3" />
+            <line x1="272" y1="88" x2="322" y2="88" stroke={accent} strokeWidth="1.3" />
+            <circle cx="210" cy="89" r="7" fill={accentFill} />
+          </svg>
+        );
+
       case 'umons-rail-edge-cloud':
         return (
           <svg

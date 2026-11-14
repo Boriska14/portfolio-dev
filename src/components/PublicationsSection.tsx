@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { BookOpen, Check, Copy } from 'lucide-react';
-import { PUBLICATION } from '../data/portfolioData';
+import { BookOpen, Check, Copy, FileText } from 'lucide-react';
+import { PROFILE, PUBLICATION } from '../data/portfolioData';
 import { RevealText } from './RevealText';
 
 export function PublicationsSection() {
@@ -96,6 +96,37 @@ export function PublicationsSection() {
                 <p className="mt-2 text-sm leading-relaxed text-neutral-300">{axis.content}</p>
               </motion.div>
             ))}
+
+            {/* Companion UMONS Master's Thesis Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
+              className="flex flex-col justify-between gap-4 rounded-xl border border-neutral-800 bg-[#17171a] p-6 sm:flex-row sm:items-center"
+            >
+              <div>
+                <p className="font-mono text-xs text-[#f0674b]">
+                  Mémoire de Master (TFE) · UMONS / Polytech Mons (2026)
+                </p>
+                <h4 className="mt-1.5 font-display text-lg font-semibold text-white">
+                  Deep Learning pour la sécurité et la maintenance ferroviaire
+                </h4>
+                <p className="mt-1 text-xs leading-relaxed text-neutral-400">
+                  Projet Track Sentry Vision (dir. Prof. Saïd Mahmoudi &amp; Tanguy Vansnick) ·
+                  DualSightNet (98,0 % BA) et RT-DETR + Diversity Sampling (90,8 % mAP@50:95).
+                </p>
+              </div>
+              <a
+                href={PROFILE.thesisPdfUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-[42px] items-center gap-2 self-start rounded-lg bg-[#c4381e] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#a82d16] whitespace-nowrap shrink-0 sm:self-center"
+              >
+                <FileText className="h-4 w-4" aria-hidden="true" />
+                Lire le mémoire
+              </a>
+            </motion.div>
           </div>
         </div>
       </div>

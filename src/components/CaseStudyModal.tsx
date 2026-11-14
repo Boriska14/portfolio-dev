@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { Check, Copy, ExternalLink, RotateCcw, X } from 'lucide-react';
+import { Check, Copy, ExternalLink, FileText, RotateCcw, X } from 'lucide-react';
 import { ProjectCaseStudy } from '../data/portfolioData';
 import { ProjectArchitectureVisual } from './ProjectArchitectureVisual';
 
@@ -47,6 +47,10 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
   const [jeffreyInput, setJeffreyInput] = useState('');
   const [mateViewport, setMateViewport] = useState<'desktop' | 'mobile'>('desktop');
   const [glitchRubric, setGlitchRubric] = useState<'sommaire' | 'journal' | 'notes'>('sommaire');
+  const [tsvMode, setTsvMode] = useState<'classification' | 'detection'>('classification');
+  const [tsvAngle, setTsvAngle] = useState<'frontale' | 'verticale'>('frontale');
+  const [tsvIteration, setTsvIteration] = useState<number>(6);
+  const [zoneProposedPrice, setZoneProposedPrice] = useState<number>(115000);
 
   useEffect(() => {
     setActiveTab(initialTab);
@@ -55,6 +59,9 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
     setSupplyStep(0);
     setPicState('En attente d’empreinte...');
     setGlitchRubric('sommaire');
+    setTsvMode('classification');
+    setTsvAngle('frontale');
+    setTsvIteration(6);
   }, [project, initialTab]);
 
   useEffect(() => {
@@ -207,7 +214,7 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
             })}
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             {project.liveUrl && (
               <a
                 href={project.liveUrl}
@@ -217,6 +224,17 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
               >
                 Voir le site
                 <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
+            )}
+            {project.thesisPdfUrl && (
+              <a
+                href={project.thesisPdfUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-md bg-[#101012] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#c4381e]"
+              >
+                <FileText className="h-3.5 w-3.5 text-[#f0674b]" aria-hidden="true" />
+                Mémoire PDF
               </a>
             )}
             <a
@@ -268,7 +286,13 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                   </p>
 
                   <div className="mt-4">
-                    <ProjectArchitectureVisual projectId={project.id} variant="light" />
+                    <ProjectArchitectureVisual
+                      projectId={project.id}
+                      variant="light"
+                      previewImage={project.previewImage}
+                      liveUrl={project.liveUrl}
+                      title={project.title}
+                    />
                   </div>
 
                   <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-12">
@@ -377,6 +401,211 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                 <div className="rounded-lg border border-[#141414]/12 bg-[#f2ede4] px-4 py-3 text-xs leading-relaxed text-neutral-700">
                   Aperçu interactif du projet — manipulez les paramètres ci-dessous pour voir le comportement attendu.
                 </div>
+
+                {project.demoType === 'umons-tsv' && (
+                  <div className="space-y-5">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div className="flex gap-1 rounded-lg border border-neutral-200 bg-[#f2ede4] p-1">
+                        <button
+                          type="button"
+                          onClick={() => setTsvMode('classification')}
+                          className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
+                            tsvMode === 'classification'
+                              ? 'bg-[#101012] text-white'
+                              : 'text-neutral-700 hover:text-[#101012]'
+                          }`}
+                        >
+                          Classification (DualSightNet)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setTsvMode('detection')}
+                          className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
+                            tsvMode === 'detection'
+                              ? 'bg-[#101012] text-white'
+                              : 'text-neutral-700 hover:text-[#101012]'
+                          }`}
+                        >
+                          Détection &amp; Active Learning
+                        </button>
+                      </div>
+
+                      <span className="font-mono text-xs text-[#c4381e]">
+                        Données vérifiées · Mémoire UMONS 2026
+                      </span>
+                    </div>
+
+                    {tsvMode === 'classification' ? (
+                      <div className="space-y-4">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <p className="text-xs text-neutral-700">
+                            Comparaison sur RailSurface-7 (8 classes, validation croisée 5 folds) :
+                          </p>
+                          <div className="flex gap-1 rounded-lg border border-neutral-200 bg-white p-1">
+                            {(['frontale', 'verticale'] as const).map((angle) => (
+                              <button
+                                key={angle}
+                                type="button"
+                                onClick={() => setTsvAngle(angle)}
+                                className={`rounded px-2.5 py-1 text-xs font-semibold ${
+                                  tsvAngle === angle
+                                    ? 'bg-[#c4381e] text-white'
+                                    : 'text-neutral-600 hover:text-[#101012]'
+                                }`}
+                              >
+                                Vue {angle}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                          {(tsvAngle === 'frontale'
+                            ? [
+                                {
+                                  name: 'EfficientNet-B0 (baseline)',
+                                  ba: '82,5 %',
+                                  f1: '0,872',
+                                  inf: '12,3 ms',
+                                  highlight: false,
+                                },
+                                {
+                                  name: 'EfficientNet-B0 + Attention',
+                                  ba: '84,1 %',
+                                  f1: '0,884',
+                                  inf: '13,8 ms',
+                                  highlight: false,
+                                },
+                                {
+                                  name: 'DualSightNet (Retenu)',
+                                  ba: '98,0 %',
+                                  f1: '0,940',
+                                  inf: '34,7 ms',
+                                  highlight: true,
+                                },
+                              ]
+                            : [
+                                {
+                                  name: 'EfficientNet-B0 (baseline)',
+                                  ba: '79,3 %',
+                                  f1: '0,825',
+                                  inf: '12,1 ms',
+                                  highlight: false,
+                                },
+                                {
+                                  name: 'EfficientNet-B0 + Attention',
+                                  ba: '80,9 %',
+                                  f1: '0,838',
+                                  inf: '13,5 ms',
+                                  highlight: false,
+                                },
+                                {
+                                  name: 'DualSightNet (Retenu)',
+                                  ba: '93,4 %',
+                                  f1: '0,867',
+                                  inf: '34,2 ms',
+                                  highlight: true,
+                                },
+                              ]
+                          ).map((row) => (
+                            <div
+                              key={row.name}
+                              className={`rounded-xl border p-4 ${
+                                row.highlight
+                                  ? 'border-[#c4381e] bg-[#101012] text-white'
+                                  : 'border-neutral-200 bg-white text-[#101012]'
+                              }`}
+                            >
+                              <p
+                                className={`font-mono text-[11px] font-semibold ${
+                                  row.highlight ? 'text-[#f0674b]' : 'text-neutral-500'
+                                }`}
+                              >
+                                {row.name}
+                              </p>
+                              <p className="mt-2 font-sans text-2xl font-bold tabular-nums">
+                                {row.ba}
+                              </p>
+                              <p
+                                className={`text-[11px] ${
+                                  row.highlight ? 'text-neutral-300' : 'text-neutral-600'
+                                }`}
+                              >
+                                Balanced Accuracy · F1 : {row.f1} · {row.inf}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="rounded-xl border border-neutral-200 bg-white p-5">
+                          <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-medium text-neutral-700">
+                            <label htmlFor="tsv-iter">
+                              Itération d’Active Learning ({600 + tsvIteration * 75} images annotées)
+                            </label>
+                            <span className="font-mono font-semibold text-[#c4381e] tabular-nums">
+                              Itération {tsvIteration} / 8
+                            </span>
+                          </div>
+                          <input
+                            id="tsv-iter"
+                            type="range"
+                            min={0}
+                            max={8}
+                            step={1}
+                            value={tsvIteration}
+                            onChange={(e) => setTsvIteration(Number(e.target.value))}
+                            className="mt-3 w-full accent-[#c4381e]"
+                          />
+                        </div>
+
+                        {(() => {
+                          const diversityScores = [47.6, 55.8, 64.1, 71.9, 79.2, 85.4, 90.8, 93.2, 95.1];
+                          const entropyScores = [47.6, 63.1, 65.4, 66.2, 66.8, 67.1, 67.3, 67.5, 67.6];
+                          const yoloScores = [42.7, 50.9, 58.4, 65.2, 71.5, 77.2, 82.3, 86.7, 90.4];
+                          return (
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                              <div className="rounded-xl border border-[#c4381e] bg-[#101012] p-4 text-white">
+                                <p className="font-mono text-[11px] font-semibold text-[#f0674b]">
+                                  RT-DETR + Diversity Sampling
+                                </p>
+                                <p className="mt-2 font-sans text-2xl font-bold tabular-nums">
+                                  {diversityScores[tsvIteration].toFixed(1)} %
+                                </p>
+                                <p className="text-[11px] text-neutral-300">
+                                  mAP@50:95 · 18,2 ms (55 FPS)
+                                </p>
+                              </div>
+                              <div className="rounded-xl border border-neutral-200 bg-white p-4 text-[#101012]">
+                                <p className="font-mono text-[11px] font-semibold text-neutral-500">
+                                  RT-DETR + Entropie inverse
+                                </p>
+                                <p className="mt-2 font-sans text-2xl font-bold tabular-nums">
+                                  {entropyScores[tsvIteration].toFixed(1)} %
+                                </p>
+                                <p className="text-[11px] text-neutral-600">
+                                  Stagne dès l’itération 2
+                                </p>
+                              </div>
+                              <div className="rounded-xl border border-neutral-200 bg-white p-4 text-[#101012]">
+                                <p className="font-mono text-[11px] font-semibold text-neutral-500">
+                                  YOLOv8n + Diversity
+                                </p>
+                                <p className="mt-2 font-sans text-2xl font-bold tabular-nums">
+                                  {yoloScores[tsvIteration].toFixed(1)} %
+                                </p>
+                                <p className="text-[11px] text-neutral-600">
+                                  8,7 ms (115 FPS) · 90 % à l’it. 8
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {project.demoType === 'umons-rail' && (
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -1150,12 +1379,14 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                 )}
 
                 {project.demoType === 'zone-groupe' && (
-                  <div className="rounded-xl border border-neutral-200 bg-white p-6">
+                  <div className="space-y-4">
                     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-200 pb-4">
                       <div>
-                        <p className="font-mono text-xs text-[#c4381e]">Application déployée</p>
+                        <p className="font-mono text-xs text-[#c4381e]">
+                          Boutique en ligne · zone-groupe-sigma.vercel.app
+                        </p>
                         <h3 className="mt-1 font-display text-lg font-semibold text-[#101012]">
-                          Zone Groupe
+                          Zone Groupe — L’électronique au juste prix
                         </h3>
                       </div>
                       {project.liveUrl && (
@@ -1165,15 +1396,52 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                           rel="noreferrer"
                           className="inline-flex min-h-[40px] items-center gap-2 rounded-lg bg-[#c4381e] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#a82d16]"
                         >
-                          Ouvrir zone-groupe-sigma.vercel.app
+                          Ouvrir la boutique
                           <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                         </a>
                       )}
                     </div>
-                    <p className="mt-4 text-sm leading-relaxed text-neutral-700">
-                      Application web développée et mise en ligne sur Vercel. Cliquez sur le bouton
-                      ci-dessus pour consulter la version déployée dans un nouvel onglet.
-                    </p>
+
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                      <div className="rounded-xl border border-neutral-200 bg-white p-5">
+                        <p className="font-mono text-xs font-semibold text-[#101012]">
+                          Simulation de négociation directe
+                        </p>
+                        <p className="mt-1 text-xs text-neutral-600">
+                          Exemple d’offre tarifaire préparée avant validation avec le vendeur sur
+                          WhatsApp.
+                        </p>
+                        <div className="mt-4">
+                          <div className="flex justify-between text-xs font-medium text-neutral-700">
+                            <label htmlFor="zone-price">Proposition client (FCFA)</label>
+                            <span className="font-mono font-semibold text-[#c4381e] tabular-nums">
+                              {zoneProposedPrice.toLocaleString('fr-FR')} FCFA
+                            </span>
+                          </div>
+                          <input
+                            id="zone-price"
+                            type="range"
+                            min={95000}
+                            max={135000}
+                            step={2500}
+                            value={zoneProposedPrice}
+                            onChange={(e) => setZoneProposedPrice(Number(e.target.value))}
+                            className="mt-2 w-full accent-[#c4381e]"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="rounded-xl border border-neutral-800 bg-[#101012] p-5 text-white">
+                        <p className="font-mono text-xs text-[#f0674b]">
+                          Récapitulatif WhatsApp vendeur
+                        </p>
+                        <p className="mt-3 rounded border border-neutral-800 bg-neutral-950 p-3 font-mono text-xs leading-relaxed text-neutral-200">
+                          {zoneProposedPrice >= 110000
+                            ? `Offre acceptée (${zoneProposedPrice.toLocaleString('fr-FR')} FCFA) → Commande prête à finaliser sur WhatsApp.`
+                            : `Proposition (${zoneProposedPrice.toLocaleString('fr-FR')} FCFA) → Contre-offre transmise au gérant en direct.`}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 )}
               </motion.div>

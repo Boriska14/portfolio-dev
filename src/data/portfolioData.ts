@@ -25,6 +25,7 @@ export interface ProjectCaseStudy {
   results: string[];
   demoType:
     | 'umons-rail'
+    | 'umons-tsv'
     | 'aquasafe'
     | 'eneo'
     | 'digital-twin'
@@ -39,6 +40,8 @@ export interface ProjectCaseStudy {
     | 'zone-groupe';
   repoUrl: string;
   liveUrl?: string;
+  previewImage?: string;
+  thesisPdfUrl?: string;
 }
 
 export interface SkillGroup {
@@ -96,13 +99,14 @@ export const PROFILE = {
   githubUrl: 'https://github.com/boriska-mbilongo',
   linkedinUrl: 'https://www.linkedin.com/in/boriska-mbilongo',
   cvPdfUrl: '/assets/aistudio/CV_Boriska_Mbilongo_ATS_v5_e90929ca.pdf',
+  thesisPdfUrl: '/assets/aistudio/Memoirevf__2__320747fb.pdf',
   heroGreeting: 'Boriska Mbilongo · Ingénieure informatique',
   heroHeadline:
     'Développer des logiciels fiables, des objets connectés jusqu’au Cloud.',
   bioLead:
     'Ingénieure diplômée de l’UCAC-ICAM (titre CTI, 2026), j’ai travaillé et étudié entre le Cameroun, la France et la Belgique. J’aime partir d’un problème concret  vérifier des données sensibles, cartographier des forages ou suivre l’état d’un rail  pour écrire un logiciel clair et utile sur le terrain.',
   bioSecondary:
-    'Je travaille principalement en Python (Django, Flask, FastAPI), Java et Node.js/React, avec une vraie curiosité pour l’embarqué (microcontrôleurs PIC, Arduino, Raspberry Pi), les bases PostgreSQL/MongoDB et Docker.',
+    'Je travaille principalement en Python (Django, Flask, FastAPI, PyTorch), Java et Node.js/React, avec une vraie curiosité pour l’embarqué (microcontrôleurs PIC, Arduino, Raspberry Pi), la vision par ordinateur, les bases PostgreSQL/MongoDB et Docker.',
 };
 
 export const KEY_OUTCOMES = [
@@ -130,8 +134,56 @@ export const KEY_OUTCOMES = [
 
 export const PROJECTS: ProjectCaseStudy[] = [
   {
+    id: 'umons-track-sentry-vision',
+    title: 'Track Sentry Vision — Deep Learning ferroviaire (TFE UMONS)',
+    subtitle: 'Classification des défauts de rail (DualSightNet) & détection d’obstacles temps réel (RT-DETR)',
+    category: 'Académique',
+    period: '2026 · Erasmus Master',
+    country: 'Belgique',
+    context: 'UMONS · Faculté Polytechnique (Polytech Mons), Belgique',
+    domain: 'Vision par ordinateur & Deep Learning ferroviaire',
+    summary:
+      'Travail de Fin d’Études en Master Ingénieur Civil en Informatique et Gestion (dir. Prof. Saïd Mahmoudi & Tanguy Vansnick) : conception de DualSightNet pour classer 8 défauts de surface du rail et mise en œuvre de RT-DETR avec Active Learning par Diversity Sampling pour la détection d’obstacles.',
+    problem:
+      'La maintenance ferroviaire se heurte à des défauts rares (ratio jusqu’à 1:354 sur RailSurface-7) difficiles à distinguer sans contexte global, ainsi qu’au coût d’annotation élevé et aux exigences temps réel (< 100 ms) pour la détection d’obstacles.',
+    architectureSummary:
+      'Deux pipelines complémentaires entraînés sous PyTorch 2.0 / CUDA (RTX 3090) et évalués en vue frontale et verticale : DualSightNet (CNN + Transformer) avec Focal Loss pondérée, et RT-DETR piloté par Diversity Sampling itératif.',
+    architectureLayers: [
+      {
+        layer: '01 · Classification (DualSightNet)',
+        component: 'ResNet50 + Swin-Tiny + Fusion ECA',
+        detail: 'Fusion dynamique via gate paramétrique, Geometry Attention multi-têtes et convolutions multi-échelles à dilatations (1, 2, 3) avec Focal Loss (γ = 2,0).',
+      },
+      {
+        layer: '02 · Détection (RT-DETR)',
+        component: 'Encodeur hybride & requêtes sans NMS',
+        detail: 'Détection temps réel sur 5 classes d’obstacles (piéton, véhicule, animal, rocher, vélo) à 18,2 ms/image (55 FPS).',
+      },
+      {
+        layer: '03 · Active Learning',
+        component: 'Diversity Sampling (clustering K-Means)',
+        detail: 'Amorçage sur 600 images et sélection par lots de 75 images diversifiées avec ré-entraînement complet : 90,8 % mAP@50:95 atteints en 6 itérations (1 050 images).',
+      },
+    ],
+    technologies: ['Python', 'PyTorch 2.0', 'CUDA', 'ResNet50', 'Swin-Tiny', 'RT-DETR', 'YOLOv8n', 'Active Learning'],
+    role: 'Conception expérimentale complète en Erasmus à Polytech Mons : implémentation des architectures, validation croisée stratifiée 5 folds, études d’ablation, comparaison Active Learning et analyse des limites (reality gap, portée > 70 m).',
+    challenges: [
+      'Gérer un déséquilibre extrême de classes (8 images pour Grooves contre 2 830 pour Flakings) via Focal Loss pondérée et validation croisée stratifiée.',
+      'Éviter la stagnation précoce de l’incertitude pure (entropie plafonnant à 67,6 % mAP) en prouvant l’efficacité linéaire du Diversity Sampling.',
+      'Mesurer concrètement le reality gap synthétique → réel (chute de 90,8 % à 71,2 % sur 50 images réelles) pour cadrer le déploiement.',
+    ],
+    results: [
+      '98,0 % Balanced Accuracy (± 0,007) et 0,940 F1 pondéré en vue frontale (+15,5 pts vs EfficientNet-B0), avec +23,8 pts F1 sur Joints et +23,6 pts sur Grooves.',
+      '90,8 % mAP@50:95 sur SynRailObs en 6 itérations (1 050 images) à 55 FPS, réduisant de 30 à 40 % l’effort d’annotation.',
+      'Étude croisée vue frontale / vue verticale et validation par ablation de chaque brique de DualSightNet.',
+    ],
+    demoType: 'umons-tsv',
+    repoUrl: 'https://github.com/boriska-mbilongo',
+    thesisPdfUrl: '/assets/aistudio/Memoirevf__2__320747fb.pdf',
+  },
+  {
     id: 'umons-rail-edge-cloud',
-    title: 'Surveillance ferroviaire intelligente',
+    title: 'Surveillance ferroviaire intelligente — Edge-to-Cloud',
     subtitle: 'Acquisition temps réel et analyse de capteurs multimodaux',
     category: 'Professionnel',
     period: '02/2026 – 07/2026',
@@ -526,6 +578,7 @@ export const PROJECTS: ProjectCaseStudy[] = [
     demoType: 'wuendjo',
     repoUrl: 'https://github.com/boriska-mbilongo',
     liveUrl: 'https://wuendjo.vercel.app/',
+    previewImage: '/assets/sites/wuendjo.png',
   },
   {
     id: 'jeffrey-assistant',
@@ -613,6 +666,7 @@ export const PROJECTS: ProjectCaseStudy[] = [
     demoType: 'mateconsulting',
     repoUrl: 'https://github.com/boriska-mbilongo',
     liveUrl: 'https://mateconsulting-pi.vercel.app/',
+    previewImage: '/assets/sites/mateconsulting.png',
   },
   {
     id: 'creative-glitch-mag',
@@ -657,45 +711,52 @@ export const PROJECTS: ProjectCaseStudy[] = [
     demoType: 'creative-glitch',
     repoUrl: 'https://github.com/boriska-mbilongo',
     liveUrl: 'https://creative-glitch.vercel.app/',
+    previewImage: '/assets/sites/creative-glitch.png',
   },
   {
     id: 'zone-groupe-app',
-    title: 'Zone Groupe — Plateforme web collaborative',
-    subtitle: 'Application web conçue et déployée en ligne',
+    title: 'Zone Groupe — Boutique d’électronique & négociation directe',
+    subtitle: 'E-commerce : catalogue, négociation du prix en direct et commande WhatsApp',
     category: 'Personnel',
     period: 'Projet web en ligne',
-    country: 'France',
-    context: 'Zone Groupe · Développement web',
-    domain: 'Application Web',
+    country: 'Cameroun',
+    context: 'Zone Groupe · E-commerce & Négociation directe',
+    domain: 'E-commerce & Application Web',
     summary:
-      'Conception et développement de l’application web Zone Groupe, déployée et accessible en ligne sur Vercel.',
+      'Conception et développement de la boutique en ligne Zone Groupe (« L’électronique au juste prix »), intégrant un catalogue, un panier et une négociation directe du tarif avec un assistant ou le gérant avant finalisation sur WhatsApp.',
     problem:
-      'Mettre en place un espace web dédié regroupant les fonctionnalités et échanges d’un groupe dans une interface directe.',
+      'Adapter la vente en ligne d’électronique aux habitudes locales où les clients souhaitent négocier le juste prix et finaliser rapidement la commande par message direct.',
     architectureSummary:
-      'Application web front-end moderne déployée en continu sur Vercel.',
+      'Boutique web responsive réunissant navigation catalogue (« Nouveautés », « Boutique »), gestion du panier et parcours de négociation + commande directe sur WhatsApp.',
     architectureLayers: [
       {
-        layer: '01 · Interface',
-        component: 'Application web React',
-        detail: 'Interface responsive conçue pour une navigation directe.',
+        layer: '01 · Catalogue & Panier',
+        component: 'Vitrine e-commerce React',
+        detail: 'Navigation directe entre nouveautés, fiches produits et panier.',
       },
       {
-        layer: '02 · Déploiement',
-        component: 'Hébergement Vercel',
-        detail: 'Mise en ligne et déploiement automatisé de la plateforme.',
+        layer: '02 · Négociation directe',
+        component: 'Échange assistant ou gérant',
+        detail: 'Discussion du prix pour chaque article afin d’obtenir le juste tarif avant validation.',
+      },
+      {
+        layer: '03 · Finalisation',
+        component: 'Commande directe WhatsApp',
+        detail: 'Transmission simplifiée de la commande convenue vers le vendeur sur WhatsApp.',
       },
     ],
-    technologies: ['React', 'JavaScript', 'HTML / CSS', 'Vercel'],
-    role: 'Conception et développement complet de l’application Zone Groupe.',
+    technologies: ['React', 'JavaScript', 'E-commerce', 'WhatsApp Flow', 'Vercel'],
+    role: 'Conception de l’expérience boutique et développement complet du site Zone Groupe déployé sur Vercel.',
     challenges: [
-      'Assurer une mise en ligne fiable et fluide sur ordinateur comme sur mobile.',
+      'Intégrer une logique de négociation humaine et fluide directement dans un parcours e-commerce sobre.',
     ],
     results: [
-      'Application web Zone Groupe déployée et accessible en ligne.',
+      'Boutique en ligne opérationnelle avec catalogue, panier et finalisation directe via WhatsApp.',
     ],
     demoType: 'zone-groupe',
     repoUrl: 'https://github.com/boriska-mbilongo',
     liveUrl: 'https://zone-groupe-sigma.vercel.app/',
+    previewImage: '/assets/sites/zone-groupe.png',
   },
 ];
 
@@ -707,6 +768,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
       'Développement d’API, scripts d’automatisation et applications métier robustes.',
     items: [
       { name: 'Python (Django, Flask, FastAPI, SQLAlchemy)', context: 'ENEO · ICAM · UMONS · Supply Chain' },
+      { name: 'PyTorch, Vision par ordinateur & Active Learning', context: 'UMONS (DualSightNet, RT-DETR, YOLOv8n)' },
       { name: 'Java & Spring Boot', context: 'Applications métier · Valuator UGECAM' },
       { name: 'JavaScript / Node.js / Express', context: 'Services web & passerelles IoT' },
       { name: 'C / C++ / Bash', context: 'Microcontrôleurs PIC, Arduino & Linux' },
@@ -769,21 +831,39 @@ export const EXPERIENCES: ExperienceItem[] = [
     stack: ['Python', 'API REST', 'PostgreSQL', 'Cartographie'],
   },
   {
+    id: 'exp-umons-tfe',
+    type: 'Académique',
+    country: 'Belgique',
+    period: '2026 · Erasmus',
+    role: 'Master Ingénieur Civil en Informatique & Gestion — TFE Deep Learning ferroviaire',
+    organization: 'UMONS · Faculté Polytechnique (Polytech Mons)',
+    location: 'Mons, Belgique',
+    focus: 'Track Sentry Vision · DualSightNet & RT-DETR + Diversity Sampling',
+    summary:
+      'Travail de Fin d’Études mené à Mons sous la direction du Prof. Saïd Mahmoudi et Tanguy Vansnick : Deep Learning appliqué à la classification des défauts de surface du rail et à la détection d’obstacles temps réel.',
+    deliverables: [
+      'DualSightNet (ResNet50 + Swin-Tiny + fusion ECA / gate) : 98,0 % Balanced Accuracy sur RailSurface-7 (8 classes), +23,8 pts F1 sur Joints et +23,6 pts sur Grooves.',
+      'RT-DETR + Active Learning (Diversity Sampling K-Means) : 90,8 % mAP@50:95 en 6 itérations (1 050 images) à 55 FPS, réduisant de 30 à 40 % l’effort d’annotation.',
+      'Analyse croisée vues frontale/verticale, études d’ablation et caractérisation du reality gap synthétique → réel.',
+    ],
+    stack: ['Python', 'PyTorch 2.0', 'CUDA', 'ResNet50', 'Swin-Tiny', 'RT-DETR', 'Active Learning'],
+  },
+  {
     id: 'exp-umons',
     type: 'Professionnel',
     country: 'Belgique',
     period: '02/2026 – 07/2026',
-    role: 'Ingénieure logicielle',
+    role: 'Ingénieure logicielle — Edge-to-Cloud ferroviaire',
     organization: 'UMONS (Université de Mons)',
     location: 'Mons, Belgique',
     focus: 'Surveillance ferroviaire intelligente · Edge-to-Cloud',
     summary:
       'Développement de modules logiciels Python pour une plateforme de surveillance ferroviaire reliée du terrain au Cloud.',
     deliverables: [
-      'Intégration de capteurs multimodaux et transmission des données en temps réel.',
-      'Écriture de composants Python pour traiter et analyser les mesures capteurs.',
+      'Intégration de capteurs multimodaux (vibrations, acoustique, température) et transmission des données en temps réel.',
+      'Écriture de composants Python modulaires pour synchroniser, traiter et analyser les signaux capteurs.',
     ],
-    stack: ['Python', 'Edge-to-Cloud', 'Capteurs multimodaux', 'Temps réel'],
+    stack: ['Python', 'Edge-to-Cloud', 'Capteurs multimodaux', 'Temps réel', 'MQTT', 'Docker'],
   },
   {
     id: 'exp-icam-research',
