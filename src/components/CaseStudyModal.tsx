@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { Check, Copy, ExternalLink, FileText, RotateCcw, X } from 'lucide-react';
+import { Check, Copy, ExternalLink, RotateCcw, X } from 'lucide-react';
 import { ProjectCaseStudy } from '../data/portfolioData';
 import { ProjectArchitectureVisual } from './ProjectArchitectureVisual';
 
@@ -17,6 +17,7 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
   const [twinSpeed, setTwinSpeed] = useState<number>(45);
   const [twinGripperOpen, setTwinGripperOpen] = useState<boolean>(true);
   const [eneoChecked, setEneoChecked] = useState<boolean>(false);
+  const [eneoRole, setEneoRole] = useState<'Administrateur' | 'Utilisateur standard' | 'Partenaire'>('Administrateur');
   const [supplyStep, setSupplyStep] = useState<number>(0);
   const [badgeAuthorized, setBadgeAuthorized] = useState<boolean>(true);
   const [accessLogs, setAccessLogs] = useState<{ time: string; badge: string; status: string }[]>([
@@ -29,8 +30,6 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
   });
   const [railVibration, setRailVibration] = useState<number>(2.4);
   const [railTemp, setRailTemp] = useState<number>(26.5);
-  const [aquasafeRegion, setAquasafeRegion] = useState<'Centre' | 'Littoral' | 'Ouest'>('Centre');
-  const [aquasafeCertifiedOnly, setAquasafeCertifiedOnly] = useState<boolean>(false);
   const [picFingerMatch, setPicFingerMatch] = useState<'valid' | 'unknown'>('valid');
   const [picState, setPicState] = useState<string>('En attente d’empreinte...');
   const [copiedPayload, setCopiedPayload] = useState(false);
@@ -47,7 +46,7 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
   const [jeffreyInput, setJeffreyInput] = useState('');
   const [mateViewport, setMateViewport] = useState<'desktop' | 'mobile'>('desktop');
   const [glitchRubric, setGlitchRubric] = useState<'sommaire' | 'journal' | 'notes'>('sommaire');
-  const [tsvMode, setTsvMode] = useState<'classification' | 'detection'>('classification');
+  const [tsvMode, setTsvMode] = useState<'edge-to-cloud' | 'classification' | 'detection'>('classification');
   const [tsvAngle, setTsvAngle] = useState<'frontale' | 'verticale'>('frontale');
   const [tsvIteration, setTsvIteration] = useState<number>(6);
   const [zoneProposedPrice, setZoneProposedPrice] = useState<number>(115000);
@@ -56,6 +55,7 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
     setActiveTab(initialTab);
     setSelectedLayerIdx(0);
     setEneoChecked(false);
+    setEneoRole('Administrateur');
     setSupplyStep(0);
     setPicState('En attente d’empreinte...');
     setGlitchRubric('sommaire');
@@ -77,40 +77,30 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
 
   const supplyStages = [
     {
-      service: 'Interface React',
-      engine: 'Envoi de commande',
+      service: 'Modèle GRAI & React',
+      engine: 'Centres de décision',
       payload: '{ "order_id": "CMD-408", "sku": "CAP-IND-09", "qty": 12 }',
-      note: 'Première vérification côté client.',
+      note: 'Cartographie GRAI des flux et validation des écarts côté interface.',
     },
     {
-      service: 'Service FastAPI',
-      engine: 'Contrôle du format',
+      service: 'Passerelle FastAPI',
+      engine: 'Contrôle & OpenAPI',
       payload: 'status: 202 Accepted · vers PostgreSQL + MongoDB',
-      note: 'Validation rapide et transmission aux services concernés.',
+      note: 'Validation des schémas et routage vers les services ERP/WMS.',
     },
     {
       service: 'PostgreSQL',
-      engine: 'Enregistrement SQL',
+      engine: 'Persistance SQL',
       payload: 'INSERT INTO orders (id, sku, qty) VALUES ("CMD-408", "CAP-IND-09", 12);',
-      note: 'Sauvegarde fiable des commandes et des stocks.',
+      note: 'Intégrité transactionnelle des commandes et niveaux de stock.',
     },
     {
       service: 'MongoDB & Flask',
-      engine: 'Historique d’étapes',
+      engine: 'Calcul des KPI',
       payload: '{ "order_id": "CMD-408", "event": "DISPATCH_READY", "warehouse": "PAR-SUD" }',
-      note: 'Suivi souple des événements de livraison.',
+      note: 'Agrégation des événements logistiques et alimentation du tableau de bord.',
     },
   ];
-
-  const aquasafeWells = [
-    { id: 'AQ-014', region: 'Centre', type: 'Forage communautaire', status: 'Certifié MINEE' },
-    { id: 'AQ-029', region: 'Littoral', type: 'Puits aménagé', status: 'En vérification' },
-    { id: 'AQ-041', region: 'Centre', type: 'Forage profond', status: 'Certifié MINEE' },
-    { id: 'AQ-058', region: 'Ouest', type: 'Forage scolaire', status: 'Certifié MINEE' },
-  ].filter(
-    (w) =>
-      w.region === aquasafeRegion && (!aquasafeCertifiedOnly || w.status === 'Certifié MINEE')
-  );
 
   const handleSimulateBadge = () => {
     const now = new Date();
@@ -127,9 +117,9 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
 
   const handleRunPicAuth = () => {
     if (picFingerMatch === 'valid') {
-      setPicState('Empreinte #04 reconnue → Ouverture activée (3s)');
+      setPicState('Empreinte #04 reconnue -> Ouverture activée (3 s)');
     } else {
-      setPicState('Empreinte inconnue → Accès refusé');
+      setPicState('Empreinte inconnue -> Accès refusé');
     }
   };
 
@@ -147,44 +137,44 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.22 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#101012]/80 p-4 backdrop-blur-xs"
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#1c140f]/75 p-4 backdrop-blur-sm"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <motion.div
-        initial={{ opacity: 0, y: 18, scale: 0.98 }}
+        initial={{ opacity: 0, y: 18, scale: 0.985 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 14, scale: 0.98 }}
-        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-        className="flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-2xl"
+        exit={{ opacity: 0, y: 12, scale: 0.985 }}
+        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+        className="flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border border-black/10 bg-white shadow-[0_30px_90px_-20px_rgba(12,12,14,0.4)]"
       >
         {/* Modal Header */}
-        <div className="flex items-start justify-between gap-4 border-b border-neutral-800 bg-[#101012] px-6 py-5 text-white">
+        <div className="flex items-start justify-between gap-4 border-b border-black/[0.07] bg-[#1c140f] px-6 py-5 text-white">
           <div>
-            <p className="font-mono text-xs text-[#f0674b]">
+            <p className="font-mono text-xs font-medium text-[#fb923c]">
               {project.category} · {project.country} · {project.period}
             </p>
-            <h2 id="case-study-title" className="mt-1 font-display text-2xl font-semibold">
+            <h2 id="case-study-title" className="mt-1 font-display text-2xl font-bold tracking-tight">
               {project.title}
             </h2>
-            <p className="mt-0.5 text-sm text-neutral-300">{project.subtitle}</p>
+            <p className="mt-0.5 text-sm text-white/65">{project.subtitle}</p>
           </div>
 
           <button
             type="button"
             onClick={onClose}
             aria-label="Fermer la fenêtre"
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-neutral-700 text-neutral-300 transition-colors hover:border-[#e04628] hover:text-white"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-white transition-colors hover:bg-[#fb923c] hover:text-[#1c140f]"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Mode Switcher */}
-        <div className="flex items-center justify-between gap-4 border-b border-neutral-200 bg-[#f2ede4] px-6 py-3">
-          <div className="inline-flex items-center gap-1 rounded-lg border border-[#141414]/15 bg-white p-1">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/[0.07] bg-[#eee6d8] px-6 py-3">
+          <div className="inline-flex items-center rounded-full bg-[#e5e7e6] p-1">
             {(
               [
                 ['case-study', 'Fiche projet'],
@@ -197,15 +187,15 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                   key={tabKey}
                   type="button"
                   onClick={() => setActiveTab(tabKey)}
-                  className={`relative min-h-[36px] rounded-md px-3.5 py-1.5 text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
-                    active ? 'text-white' : 'text-neutral-700 hover:text-[#101012]'
+                  className={`relative min-h-[34px] rounded-full px-4 py-1.5 text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
+                    active ? 'text-[#1c140f]' : 'text-[#5d4d42] hover:text-[#1c140f]'
                   }`}
                 >
                   {active && (
                     <motion.span
                       layoutId="case-modal-tab-pill"
-                      transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                      className="absolute inset-0 rounded-md bg-[#c4381e]"
+                      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                      className="absolute inset-0 rounded-full bg-[#f97316]"
                     />
                   )}
                   <span className="relative z-10">{label}</span>
@@ -220,28 +210,17 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                 href={project.liveUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-md bg-[#101012] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#c4381e]"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#1c140f] px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#fb923c] hover:text-[#1c140f]"
               >
                 Voir le site
                 <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-              </a>
-            )}
-            {project.thesisPdfUrl && (
-              <a
-                href={project.thesisPdfUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-md bg-[#101012] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#c4381e]"
-              >
-                <FileText className="h-3.5 w-3.5 text-[#f0674b]" aria-hidden="true" />
-                Mémoire PDF
               </a>
             )}
             <a
               href={project.repoUrl}
               target="_blank"
               rel="noreferrer"
-              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-[#c4381e] hover:text-[#a82d16]"
+              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-[#c2410c] hover:underline"
             >
               GitHub
               <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
@@ -258,30 +237,30 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                 className="space-y-8"
               >
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div className="rounded-xl border border-[#141414]/12 bg-[#f2ede4]/60 p-5">
-                    <h3 className="font-display text-sm font-semibold text-[#101012]">
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                  <div className="rounded-2xl bg-[#eee6d8] p-5">
+                    <h3 className="font-display text-sm font-bold text-[#1c140f]">
                       Le point de départ
                     </h3>
-                    <p className="mt-2.5 text-sm leading-relaxed text-neutral-700">{project.problem}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-[#5d4d42]">{project.problem}</p>
                   </div>
-                  <div className="rounded-xl border border-[#141414]/12 bg-[#f2ede4]/60 p-5">
-                    <h3 className="font-display text-sm font-semibold text-[#101012]">
+                  <div className="rounded-2xl bg-[#eee6d8] p-5">
+                    <h3 className="font-display text-sm font-bold text-[#1c140f]">
                       Ma contribution
                     </h3>
-                    <p className="mt-2.5 text-sm leading-relaxed text-neutral-700">{project.role}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-[#5d4d42]">{project.role}</p>
                   </div>
                 </div>
 
-                {/* Visual Representation & Plain Overview */}
+                {/* Visual Representation & Overview */}
                 <div>
-                  <h3 className="font-display text-base font-semibold text-[#101012]">
+                  <h3 className="font-display text-base font-bold text-[#1c140f]">
                     Comment c’est construit
                   </h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-neutral-600">
+                  <p className="mt-1.5 text-sm leading-relaxed text-[#5d4d42]">
                     {project.architectureSummary}
                   </p>
 
@@ -304,20 +283,20 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                             key={layer.layer}
                             type="button"
                             onClick={() => setSelectedLayerIdx(idx)}
-                            className={`flex w-full flex-col rounded-lg border p-3.5 text-left transition-all duration-150 ${
+                            className={`flex w-full flex-col rounded-2xl border p-3.5 text-left transition-all duration-200 ${
                               active
-                                ? 'border-[#c4381e] bg-[#101012] text-white'
-                                : 'border-neutral-200 bg-white text-[#101012] hover:border-neutral-300'
+                                ? 'border-[#c2410c] bg-[#1c140f] text-white'
+                                : 'border-black/[0.08] bg-white text-[#1c140f] hover:bg-[#eee6d8]'
                             }`}
                           >
                             <span
-                              className={`font-mono text-[11px] ${
-                                active ? 'text-[#f0674b]' : 'text-neutral-500'
+                              className={`font-mono text-[11px] font-medium ${
+                                active ? 'text-[#fb923c]' : 'text-[#c2410c]'
                               }`}
                             >
                               {layer.layer}
                             </span>
-                            <span className="mt-0.5 font-display text-sm font-semibold">
+                            <span className="mt-0.5 font-display text-sm font-bold">
                               {layer.component}
                             </span>
                           </button>
@@ -325,29 +304,29 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                       })}
                     </div>
 
-                    <div className="flex flex-col justify-between rounded-xl border border-[#141414]/12 bg-[#f2ede4]/60 p-5 lg:col-span-7">
+                    <div className="flex flex-col justify-between rounded-2xl bg-[#eee6d8] p-5 lg:col-span-7">
                       <AnimatePresence mode="wait">
                         <motion.div
                           key={selectedLayerIdx}
                           initial={{ opacity: 0, x: 8 }}
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: -8 }}
-                          transition={{ duration: 0.2 }}
+                          transition={{ duration: 0.18 }}
                         >
-                          <p className="font-mono text-xs font-semibold text-[#c4381e]">
+                          <p className="font-mono text-xs font-semibold text-[#c2410c]">
                             {project.architectureLayers[selectedLayerIdx]?.layer}
                           </p>
-                          <h4 className="mt-1 font-display text-lg font-semibold text-[#101012]">
+                          <h4 className="mt-1 font-display text-lg font-bold text-[#1c140f]">
                             {project.architectureLayers[selectedLayerIdx]?.component}
                           </h4>
-                          <p className="mt-3 text-sm leading-relaxed text-neutral-700">
+                          <p className="mt-3 text-sm leading-relaxed text-[#5d4d42]">
                             {project.architectureLayers[selectedLayerIdx]?.detail}
                           </p>
                         </motion.div>
                       </AnimatePresence>
 
-                      <div className="mt-6 border-t border-neutral-200 pt-4">
-                        <p className="font-mono text-xs text-neutral-600">
+                      <div className="mt-6 border-t border-black/[0.07] pt-4">
+                        <p className="font-mono text-xs font-medium text-[#5d4d42]">
                           Outils : {project.technologies.join(' · ')}
                         </p>
                       </div>
@@ -357,14 +336,14 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div>
-                    <h3 className="font-display text-base font-semibold text-[#101012]">
+                    <h3 className="font-display text-base font-bold text-[#1c140f]">
                       Difficultés rencontrées
                     </h3>
-                    <ul className="mt-3 space-y-2.5 text-sm leading-relaxed text-neutral-700">
+                    <ul className="mt-3 space-y-2.5 text-sm leading-relaxed text-[#5d4d42]">
                       {project.challenges.map((item) => (
                         <li
                           key={item}
-                          className="rounded-lg border border-neutral-200 bg-white px-4 py-3"
+                          className="rounded-2xl border border-black/[0.07] bg-white px-4 py-3"
                         >
                           {item}
                         </li>
@@ -373,15 +352,10 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                   </div>
 
                   <div>
-                    <h3 className="font-display text-base font-semibold text-[#101012]">
-                      Résultats
-                    </h3>
-                    <ul className="mt-3 space-y-2.5 text-sm leading-relaxed text-neutral-700">
+                    <h3 className="font-display text-base font-bold text-[#1c140f]">Résultats</h3>
+                    <ul className="mt-3 space-y-2.5 text-sm leading-relaxed text-[#1c140f]">
                       {project.results.map((item) => (
-                        <li
-                          key={item}
-                          className="rounded-lg border border-[#141414]/12 bg-[#f2ede4]/55 px-4 py-3"
-                        >
+                        <li key={item} className="rounded-2xl bg-[#eee6d8] px-4 py-3 font-medium">
                           {item}
                         </li>
                       ))}
@@ -395,62 +369,129 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                 className="space-y-6"
               >
-                <div className="rounded-lg border border-[#141414]/12 bg-[#f2ede4] px-4 py-3 text-xs leading-relaxed text-neutral-700">
-                  Aperçu interactif du projet — manipulez les paramètres ci-dessous pour voir le comportement attendu.
+                <div className="rounded-2xl bg-[#eee6d8] px-4 py-3 text-xs font-medium leading-relaxed text-[#5d4d42]">
+                  Aperçu interactif du projet : manipulez les paramètres ci-dessous pour observer le
+                  comportement du système.
                 </div>
 
                 {project.demoType === 'umons-tsv' && (
                   <div className="space-y-5">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="flex gap-1 rounded-lg border border-neutral-200 bg-[#f2ede4] p-1">
-                        <button
-                          type="button"
-                          onClick={() => setTsvMode('classification')}
-                          className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
-                            tsvMode === 'classification'
-                              ? 'bg-[#101012] text-white'
-                              : 'text-neutral-700 hover:text-[#101012]'
-                          }`}
-                        >
-                          Classification (DualSightNet)
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setTsvMode('detection')}
-                          className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
-                            tsvMode === 'detection'
-                              ? 'bg-[#101012] text-white'
-                              : 'text-neutral-700 hover:text-[#101012]'
-                          }`}
-                        >
-                          Détection &amp; Active Learning
-                        </button>
+                      <div className="inline-flex flex-wrap gap-1 rounded-full bg-[#e5e7e6] p-1">
+                        {(
+                          [
+                            ['classification', 'Classification (DualSightNet)'],
+                            ['detection', 'Détection (RT-DETR)'],
+                            ['edge-to-cloud', 'Capteurs Edge-to-Cloud'],
+                          ] as const
+                        ).map(([mode, label]) => (
+                          <button
+                            key={mode}
+                            type="button"
+                            onClick={() => setTsvMode(mode)}
+                            className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+                              tsvMode === mode
+                                ? 'bg-[#f97316] text-[#1c140f]'
+                                : 'text-[#5d4d42] hover:text-[#1c140f]'
+                            }`}
+                          >
+                            {label}
+                          </button>
+                        ))}
                       </div>
 
-                      <span className="font-mono text-xs text-[#c4381e]">
-                        Données vérifiées · Mémoire UMONS 2026
+                      <span className="font-mono text-xs font-medium text-[#c2410c]">
+                        Track Sentry Vision · UMONS 2026
                       </span>
                     </div>
 
-                    {tsvMode === 'classification' ? (
+                    {tsvMode === 'edge-to-cloud' && (
+                      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <div className="space-y-4 rounded-2xl border border-black/[0.08] bg-white p-5">
+                          <h3 className="font-display text-base font-bold text-[#1c140f]">
+                            Télémétrie multimodale voie ferrée
+                          </h3>
+                          <div>
+                            <div className="flex justify-between text-xs font-medium text-[#5d4d42]">
+                              <label htmlFor="rail-vib">Vibration rail (mm/s)</label>
+                              <span className="font-mono font-semibold tabular-nums text-[#c2410c]">
+                                {railVibration.toFixed(1)} mm/s
+                              </span>
+                            </div>
+                            <input
+                              id="rail-vib"
+                              type="range"
+                              min={0.5}
+                              max={8.0}
+                              step={0.1}
+                              value={railVibration}
+                              onChange={(e) => setRailVibration(Number(e.target.value))}
+                              className="mt-2 w-full accent-[#c2410c]"
+                            />
+                          </div>
+                          <div>
+                            <div className="flex justify-between text-xs font-medium text-[#5d4d42]">
+                              <label htmlFor="rail-temp">Température essieu (°C)</label>
+                              <span className="font-mono font-semibold tabular-nums text-[#c2410c]">
+                                {railTemp.toFixed(1)} °C
+                              </span>
+                            </div>
+                            <input
+                              id="rail-temp"
+                              type="range"
+                              min={10}
+                              max={65}
+                              step={0.5}
+                              value={railTemp}
+                              onChange={(e) => setRailTemp(Number(e.target.value))}
+                              className="mt-2 w-full accent-[#c2410c]"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="rounded-2xl bg-[#1c140f] p-5 text-white">
+                          <p className="font-mono text-xs font-medium text-[#fb923c]">
+                            Flux Python Edge-to-Cloud · MQTT / Docker
+                          </p>
+                          <pre className="mt-3 overflow-x-auto font-mono text-xs leading-relaxed text-white/80">
+                            {JSON.stringify(
+                              {
+                                plateforme: 'track-sentry-vision',
+                                capteur: 'rail-mons-02',
+                                vibration_mm_s: Number(railVibration.toFixed(1)),
+                                temperature_c: Number(railTemp.toFixed(1)),
+                                etat:
+                                  railVibration > 5.0 || railTemp > 50
+                                    ? 'ALERTE_ANOMALIE'
+                                    : 'NOMINAL',
+                              },
+                              null,
+                              2
+                            )}
+                          </pre>
+                        </div>
+                      </div>
+                    )}
+
+                    {tsvMode === 'classification' && (
                       <div className="space-y-4">
                         <div className="flex flex-wrap items-center justify-between gap-3">
-                          <p className="text-xs text-neutral-700">
+                          <p className="text-xs text-[#5d4d42]">
                             Comparaison sur RailSurface-7 (8 classes, validation croisée 5 folds) :
                           </p>
-                          <div className="flex gap-1 rounded-lg border border-neutral-200 bg-white p-1">
+                          <div className="inline-flex gap-1 rounded-full bg-[#e5e7e6] p-1">
                             {(['frontale', 'verticale'] as const).map((angle) => (
                               <button
                                 key={angle}
                                 type="button"
                                 onClick={() => setTsvAngle(angle)}
-                                className={`rounded px-2.5 py-1 text-xs font-semibold ${
+                                className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
                                   tsvAngle === angle
-                                    ? 'bg-[#c4381e] text-white'
-                                    : 'text-neutral-600 hover:text-[#101012]'
+                                    ? 'bg-[#1c140f] text-white'
+                                    : 'text-[#5d4d42] hover:text-[#1c140f]'
                                 }`}
                               >
                                 Vue {angle}
@@ -510,41 +551,39 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                           ).map((row) => (
                             <div
                               key={row.name}
-                              className={`rounded-xl border p-4 ${
+                              className={`rounded-2xl p-5 ${
                                 row.highlight
-                                  ? 'border-[#c4381e] bg-[#101012] text-white'
-                                  : 'border-neutral-200 bg-white text-[#101012]'
+                                  ? 'border border-[#f97316]/45 bg-[#eee6d8] text-[#1c140f]'
+                                  : 'border border-black/[0.08] bg-white text-[#1c140f]'
                               }`}
                             >
                               <p
-                                className={`font-mono text-[11px] font-semibold ${
-                                  row.highlight ? 'text-[#f0674b]' : 'text-neutral-500'
+                                className={`font-mono text-[11px] font-medium ${
+                                  row.highlight ? 'text-[#c2410c]' : 'text-[#5d4d42]'
                                 }`}
                               >
                                 {row.name}
                               </p>
-                              <p className="mt-2 font-sans text-2xl font-bold tabular-nums">
+                              <p className="mt-2 font-display text-2xl font-bold tabular-nums">
                                 {row.ba}
                               </p>
-                              <p
-                                className={`text-[11px] ${
-                                  row.highlight ? 'text-neutral-300' : 'text-neutral-600'
-                                }`}
-                              >
+                              <p className="mt-1 text-[11px] text-[#5d4d42]">
                                 Balanced Accuracy · F1 : {row.f1} · {row.inf}
                               </p>
                             </div>
                           ))}
                         </div>
                       </div>
-                    ) : (
+                    )}
+
+                    {tsvMode === 'detection' && (
                       <div className="space-y-4">
-                        <div className="rounded-xl border border-neutral-200 bg-white p-5">
-                          <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-medium text-neutral-700">
+                        <div className="rounded-2xl border border-black/[0.08] bg-white p-5">
+                          <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-medium text-[#5d4d42]">
                             <label htmlFor="tsv-iter">
                               Itération d’Active Learning ({600 + tsvIteration * 75} images annotées)
                             </label>
-                            <span className="font-mono font-semibold text-[#c4381e] tabular-nums">
+                            <span className="font-mono font-semibold text-[#c2410c] tabular-nums">
                               Itération {tsvIteration} / 8
                             </span>
                           </div>
@@ -556,7 +595,7 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                             step={1}
                             value={tsvIteration}
                             onChange={(e) => setTsvIteration(Number(e.target.value))}
-                            className="mt-3 w-full accent-[#c4381e]"
+                            className="mt-3 w-full accent-[#c2410c]"
                           />
                         </div>
 
@@ -566,36 +605,36 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                           const yoloScores = [42.7, 50.9, 58.4, 65.2, 71.5, 77.2, 82.3, 86.7, 90.4];
                           return (
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                              <div className="rounded-xl border border-[#c4381e] bg-[#101012] p-4 text-white">
-                                <p className="font-mono text-[11px] font-semibold text-[#f0674b]">
+                              <div className="rounded-2xl border border-[#f97316]/45 bg-[#eee6d8] p-5 text-[#1c140f]">
+                                <p className="font-mono text-[11px] font-medium text-[#c2410c]">
                                   RT-DETR + Diversity Sampling
                                 </p>
-                                <p className="mt-2 font-sans text-2xl font-bold tabular-nums">
+                                <p className="mt-2 font-display text-2xl font-bold tabular-nums">
                                   {diversityScores[tsvIteration].toFixed(1)} %
                                 </p>
-                                <p className="text-[11px] text-neutral-300">
+                                <p className="mt-1 text-[11px] text-[#5d4d42]">
                                   mAP@50:95 · 18,2 ms (55 FPS)
                                 </p>
                               </div>
-                              <div className="rounded-xl border border-neutral-200 bg-white p-4 text-[#101012]">
-                                <p className="font-mono text-[11px] font-semibold text-neutral-500">
+                              <div className="rounded-2xl border border-black/[0.08] bg-white p-5 text-[#1c140f]">
+                                <p className="font-mono text-[11px] font-medium text-[#5d4d42]">
                                   RT-DETR + Entropie inverse
                                 </p>
-                                <p className="mt-2 font-sans text-2xl font-bold tabular-nums">
+                                <p className="mt-2 font-display text-2xl font-bold tabular-nums">
                                   {entropyScores[tsvIteration].toFixed(1)} %
                                 </p>
-                                <p className="text-[11px] text-neutral-600">
+                                <p className="mt-1 text-[11px] text-[#5d4d42]">
                                   Stagne dès l’itération 2
                                 </p>
                               </div>
-                              <div className="rounded-xl border border-neutral-200 bg-white p-4 text-[#101012]">
-                                <p className="font-mono text-[11px] font-semibold text-neutral-500">
+                              <div className="rounded-2xl border border-black/[0.08] bg-white p-5 text-[#1c140f]">
+                                <p className="font-mono text-[11px] font-medium text-[#5d4d42]">
                                   YOLOv8n + Diversity
                                 </p>
-                                <p className="mt-2 font-sans text-2xl font-bold tabular-nums">
+                                <p className="mt-2 font-display text-2xl font-bold tabular-nums">
                                   {yoloScores[tsvIteration].toFixed(1)} %
                                 </p>
-                                <p className="text-[11px] text-neutral-600">
+                                <p className="mt-1 text-[11px] text-[#5d4d42]">
                                   8,7 ms (115 FPS) · 90 % à l’it. 8
                                 </p>
                               </div>
@@ -607,141 +646,20 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                   </div>
                 )}
 
-                {project.demoType === 'umons-rail' && (
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div className="space-y-4 rounded-xl border border-neutral-200 bg-white p-5">
-                      <h3 className="font-display text-base font-semibold text-[#101012]">
-                        Mesures capteurs
-                      </h3>
-                      <div>
-                        <div className="flex justify-between text-xs font-medium text-neutral-700">
-                          <label htmlFor="rail-vib">Vibration rail (mm/s)</label>
-                          <span className="font-mono tabular-nums">{railVibration.toFixed(1)} mm/s</span>
-                        </div>
-                        <input
-                          id="rail-vib"
-                          type="range"
-                          min={0.5}
-                          max={8.0}
-                          step={0.1}
-                          value={railVibration}
-                          onChange={(e) => setRailVibration(Number(e.target.value))}
-                          className="mt-2 w-full accent-[#c4381e]"
-                        />
-                      </div>
-                      <div>
-                        <div className="flex justify-between text-xs font-medium text-neutral-700">
-                          <label htmlFor="rail-temp">Température essieu (°C)</label>
-                          <span className="font-mono tabular-nums">{railTemp.toFixed(1)} °C</span>
-                        </div>
-                        <input
-                          id="rail-temp"
-                          type="range"
-                          min={10}
-                          max={65}
-                          step={0.5}
-                          value={railTemp}
-                          onChange={(e) => setRailTemp(Number(e.target.value))}
-                          className="mt-2 w-full accent-[#c4381e]"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="rounded-xl border border-neutral-800 bg-[#101012] p-5 text-white">
-                      <p className="font-mono text-xs text-[#f0674b]">
-                        Lecture Python · UMONS
-                      </p>
-                      <pre className="mt-3 overflow-x-auto font-mono text-xs leading-relaxed text-neutral-200">
-                        {JSON.stringify(
-                          {
-                            capteur: 'rail-mons-02',
-                            vibration_mm_s: Number(railVibration.toFixed(1)),
-                            temperature_c: Number(railTemp.toFixed(1)),
-                            etat:
-                              railVibration > 5.0 || railTemp > 50
-                                ? 'ALERTE_DETECTEE'
-                                : 'NORMAL',
-                          },
-                          null,
-                          2
-                        )}
-                      </pre>
-                    </div>
-                  </div>
-                )}
-
-                {project.demoType === 'aquasafe' && (
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="flex gap-1 rounded-lg border border-neutral-200 bg-[#f2ede4] p-1">
-                        {(['Centre', 'Littoral', 'Ouest'] as const).map((reg) => (
-                          <button
-                            key={reg}
-                            type="button"
-                            onClick={() => setAquasafeRegion(reg)}
-                            className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
-                              aquasafeRegion === reg
-                                ? 'bg-[#101012] text-white'
-                                : 'text-neutral-700 hover:text-[#101012]'
-                            }`}
-                          >
-                            {reg}
-                          </button>
-                        ))}
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => setAquasafeCertifiedOnly((v) => !v)}
-                        className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors ${
-                          aquasafeCertifiedOnly
-                            ? 'border-[#c4381e] bg-[#fdece8] text-[#c4381e]'
-                            : 'border-neutral-200 bg-white text-neutral-700'
-                        }`}
-                      >
-                        {aquasafeCertifiedOnly ? 'Certifiés MINEE uniquement' : 'Tous les statuts'}
-                      </button>
-                    </div>
-
-                    <div className="overflow-x-auto rounded-xl border border-neutral-200">
-                      <table className="w-full text-left text-xs">
-                        <thead className="border-b border-neutral-200 bg-[#f2ede4] font-mono text-neutral-700">
-                          <tr>
-                            <th className="px-4 py-3">Code</th>
-                            <th className="px-4 py-3">Région</th>
-                            <th className="px-4 py-3">Ouvrage</th>
-                            <th className="px-4 py-3">Statut</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-neutral-100 font-mono text-neutral-800">
-                          {aquasafeWells.map((w) => (
-                            <tr key={w.id}>
-                              <td className="px-4 py-3 font-semibold">{w.id}</td>
-                              <td className="px-4 py-3">{w.region}</td>
-                              <td className="px-4 py-3">{w.type}</td>
-                              <td className="px-4 py-3 font-semibold text-[#c4381e]">{w.status}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
-
                 {project.demoType === 'sparte-biometric' && (
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div className="rounded-xl border border-neutral-200 bg-white p-5">
-                      <h3 className="font-display text-base font-semibold text-[#101012]">
+                    <div className="rounded-2xl border border-black/[0.08] bg-white p-5">
+                      <h3 className="font-display text-base font-bold text-[#1c140f]">
                         Test de lecture biométrique
                       </h3>
-                      <div className="mt-4 flex gap-2">
+                      <div className="mt-4 flex flex-wrap gap-2">
                         <button
                           type="button"
                           onClick={() => setPicFingerMatch('valid')}
-                          className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
+                          className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
                             picFingerMatch === 'valid'
-                              ? 'border-[#c4381e] bg-[#101012] text-white'
-                              : 'border-neutral-200 text-neutral-700'
+                              ? 'bg-[#1c140f] text-white'
+                              : 'bg-[#eee6d8] text-[#1c140f]'
                           }`}
                         >
                           Empreinte enregistrée
@@ -749,10 +667,10 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                         <button
                           type="button"
                           onClick={() => setPicFingerMatch('unknown')}
-                          className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
+                          className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
                             picFingerMatch === 'unknown'
-                              ? 'border-[#c4381e] bg-[#101012] text-white'
-                              : 'border-neutral-200 text-neutral-700'
+                              ? 'bg-[#1c140f] text-white'
+                              : 'bg-[#eee6d8] text-[#1c140f]'
                           }`}
                         >
                           Empreinte inconnue
@@ -761,15 +679,17 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                       <button
                         type="button"
                         onClick={handleRunPicAuth}
-                        className="mt-4 inline-flex min-h-[40px] items-center rounded-lg bg-[#c4381e] px-4 py-2 text-xs font-semibold text-white hover:bg-[#a82d16]"
+                        className="mt-4 inline-flex min-h-[40px] items-center rounded-full bg-[#fb923c] px-5 py-2 text-xs font-bold text-[#1c140f] transition-colors hover:bg-[#f97316]"
                       >
                         Lancer la vérification
                       </button>
                     </div>
 
-                    <div className="rounded-xl border border-neutral-800 bg-[#101012] p-5 text-white">
-                      <p className="font-mono text-xs text-[#f0674b]">Réponse microcontrôleur PIC</p>
-                      <p className="mt-3 rounded border border-neutral-800 bg-neutral-950 p-4 font-mono text-xs text-neutral-200">
+                    <div className="rounded-2xl bg-[#1c140f] p-5 text-white">
+                      <p className="font-mono text-xs font-medium text-[#fb923c]">
+                        Réponse microcontrôleur PIC
+                      </p>
+                      <p className="mt-3 rounded-xl border border-white/10 bg-black/40 p-4 font-mono text-xs text-white/80">
                         {picState}
                       </p>
                     </div>
@@ -778,15 +698,17 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
 
                 {project.demoType === 'digital-twin' && (
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div className="rounded-xl border border-neutral-200 bg-white p-5">
-                      <h3 className="font-display text-base font-semibold text-[#101012]">
-                        Pilotage du jumeau numérique
+                    <div className="rounded-2xl border border-black/[0.08] bg-white p-5">
+                      <h3 className="font-display text-base font-bold text-[#1c140f]">
+                        Pilotage du jumeau numérique (Salle LIFE)
                       </h3>
                       <div className="mt-4 space-y-5">
                         <div>
-                          <div className="flex justify-between text-xs font-medium text-neutral-700">
+                          <div className="flex justify-between text-xs font-medium text-[#5d4d42]">
                             <label htmlFor="twin-speed">Vitesse de l’axe (%)</label>
-                            <span className="font-mono tabular-nums text-[#c4381e]">{twinSpeed}%</span>
+                            <span className="font-mono font-semibold tabular-nums text-[#c2410c]">
+                              {twinSpeed}%
+                            </span>
                           </div>
                           <input
                             id="twin-speed"
@@ -795,18 +717,18 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                             max={100}
                             value={twinSpeed}
                             onChange={(e) => setTwinSpeed(Number(e.target.value))}
-                            className="mt-2 w-full accent-[#c4381e]"
+                            className="mt-2 w-full accent-[#c2410c]"
                           />
                         </div>
 
-                        <div className="flex items-center justify-between border-t border-neutral-100 pt-4">
-                          <span className="text-sm font-medium text-neutral-700">
+                        <div className="flex items-center justify-between border-t border-black/[0.07] pt-4">
+                          <span className="text-sm font-medium text-[#5d4d42]">
                             Pince de la cellule
                           </span>
                           <button
                             type="button"
                             onClick={() => setTwinGripperOpen((v) => !v)}
-                            className="rounded-lg bg-[#101012] px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-neutral-800"
+                            className="rounded-full bg-[#1c140f] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#fb923c] hover:text-[#1c140f]"
                           >
                             {twinGripperOpen ? 'Fermer la pince' : 'Ouvrir la pince'}
                           </button>
@@ -814,10 +736,10 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                       </div>
                     </div>
 
-                    <div className="rounded-xl border border-neutral-800 bg-[#101012] p-5 text-neutral-100">
+                    <div className="rounded-2xl bg-[#1c140f] p-5 text-white">
                       <div className="flex items-center justify-between">
-                        <span className="font-mono text-xs text-[#f0674b]">
-                          État retourné par Flask
+                        <span className="font-mono text-xs font-medium text-[#fb923c]">
+                          Flask API · SCRAM / RabbitMQ
                         </span>
                         <button
                           type="button"
@@ -825,6 +747,9 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                             handleCopyPayload(
                               JSON.stringify(
                                 {
+                                  plateforme: 'salle-life-grand-paris-sud',
+                                  broker: 'rabbitmq-scram',
+                                  simulateur: 'ros-gazebo',
                                   vitesse_pct: twinSpeed,
                                   pince: twinGripperOpen ? 'OUVERTE' : 'FERMEE',
                                 },
@@ -833,16 +758,18 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                               )
                             )
                           }
-                          className="inline-flex items-center gap-1 text-xs text-neutral-300 hover:text-white"
+                          className="inline-flex items-center gap-1 text-xs text-white/60 hover:text-white"
                         >
                           {copiedPayload ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                           {copiedPayload ? 'Copié' : 'Copier'}
                         </button>
                       </div>
-                      <pre className="mt-3 overflow-x-auto font-mono text-xs leading-relaxed text-neutral-200">
+                      <pre className="mt-3 overflow-x-auto font-mono text-xs leading-relaxed text-white/80">
                         {JSON.stringify(
                           {
-                            simulateur: 'gazebo',
+                            plateforme: 'salle-life-grand-paris-sud',
+                            broker: 'rabbitmq-scram',
+                            simulateur: 'ros-gazebo',
                             vitesse_pct: twinSpeed,
                             pince: twinGripperOpen ? 'OUVERTE' : 'FERMEE',
                           },
@@ -857,13 +784,29 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                 {project.demoType === 'eneo' && (
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <p className="text-sm text-neutral-700">
-                        Aperçu du logiciel de réconciliation automatique des ventes.
-                      </p>
+                      <div className="inline-flex flex-wrap gap-1 rounded-full bg-[#e5e7e6] p-1">
+                        {(['Administrateur', 'Utilisateur standard', 'Partenaire'] as const).map(
+                          (role) => (
+                            <button
+                              key={role}
+                              type="button"
+                              onClick={() => setEneoRole(role)}
+                              className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+                                eneoRole === role
+                                  ? 'bg-[#f97316] text-[#1c140f]'
+                                  : 'text-[#5d4d42] hover:text-[#1c140f]'
+                              }`}
+                            >
+                              {role}
+                            </button>
+                          )
+                        )}
+                      </div>
+
                       <button
                         type="button"
                         onClick={() => setEneoChecked((v) => !v)}
-                        className="inline-flex min-h-[40px] items-center gap-2 rounded-lg bg-[#c4381e] px-4 py-2 text-xs font-semibold text-white hover:bg-[#a82d16]"
+                        className="inline-flex min-h-[38px] items-center gap-2 rounded-full bg-[#1c140f] px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#fb923c] hover:text-[#1c140f]"
                       >
                         {eneoChecked ? (
                           <>
@@ -871,44 +814,55 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                             Réinitialiser
                           </>
                         ) : (
-                          'Lancer la réconciliation'
+                          'Lancer le rapprochement CSV'
                         )}
                       </button>
                     </div>
 
-                    <div className="overflow-x-auto rounded-xl border border-neutral-200">
+                    <p className="text-xs text-[#5d4d42]">
+                      Profil UML actif :{' '}
+                      <span className="font-semibold text-[#1c140f]">{eneoRole}</span>{' '}
+                      {eneoRole === 'Administrateur' &&
+                        '(accès complet : Import CSV, Rapprochement, Alertes, Audit & RBAC)'}
+                      {eneoRole === 'Utilisateur standard' &&
+                        '(import des flux, rapprochement assisté et export des rapports)'}
+                      {eneoRole === 'Partenaire' &&
+                        '(soumission des lots encaissements Mobile Money et suivi des écarts)'}
+                    </p>
+
+                    <div className="overflow-x-auto rounded-2xl border border-black/[0.08]">
                       <table className="w-full text-left text-xs">
-                        <thead className="border-b border-neutral-200 bg-[#f2ede4] font-mono text-neutral-700">
+                        <thead className="border-b border-black/[0.08] bg-[#eee6d8] font-mono text-[#1c140f]">
                           <tr>
                             <th className="px-4 py-3">Référence</th>
-                            <th className="px-4 py-3">Ventes</th>
+                            <th className="px-4 py-3">Flux ventes</th>
                             <th className="px-4 py-3">Facturation</th>
-                            <th className="px-4 py-3">Résultat</th>
+                            <th className="px-4 py-3">Statut / Alerte</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-neutral-100 font-mono tabular-nums text-neutral-800">
+                        <tbody className="divide-y divide-black/[0.06] font-mono tabular-nums text-[#1c140f]">
                           <tr>
                             <td className="px-4 py-3">TX-2024-101</td>
                             <td className="px-4 py-3">42 500</td>
                             <td className="px-4 py-3">42 500</td>
-                            <td className="px-4 py-3">
-                              {eneoChecked ? 'Conforme' : 'En attente'}
+                            <td className="px-4 py-3 font-semibold text-[#c2410c]">
+                              {eneoChecked ? 'Rapproché (Conforme)' : 'Import CSV prêt'}
                             </td>
                           </tr>
                           <tr>
                             <td className="px-4 py-3">TX-2024-102</td>
                             <td className="px-4 py-3">18 900</td>
                             <td className="px-4 py-3">18 400</td>
-                            <td className="px-4 py-3 font-semibold text-[#c4381e]">
-                              {eneoChecked ? 'Écart détecté : -500' : 'En attente'}
+                            <td className="px-4 py-3 font-semibold text-[#b91c1c]">
+                              {eneoChecked ? 'Alerte : écart de -500' : 'Import CSV prêt'}
                             </td>
                           </tr>
                           <tr>
                             <td className="px-4 py-3">TX-2024-103</td>
                             <td className="px-4 py-3">31 000</td>
                             <td className="px-4 py-3">Absent</td>
-                            <td className="px-4 py-3 font-semibold text-[#c4381e]">
-                              {eneoChecked ? 'Non facturé' : 'En attente'}
+                            <td className="px-4 py-3 font-semibold text-[#b91c1c]">
+                              {eneoChecked ? 'Exception : non facturé' : 'Import CSV prêt'}
                             </td>
                           </tr>
                         </tbody>
@@ -925,10 +879,10 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                           key={st.service}
                           type="button"
                           onClick={() => setSupplyStep(idx)}
-                          className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
+                          className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
                             supplyStep === idx
-                              ? 'border-[#c4381e] bg-[#c4381e] text-white'
-                              : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300'
+                              ? 'bg-[#f97316] text-[#1c140f]'
+                              : 'bg-[#eee6d8] text-[#1c140f] hover:bg-[#e5e7e6]'
                           }`}
                         >
                           Étape {idx + 1} · {st.service}
@@ -936,12 +890,12 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                       ))}
                     </div>
 
-                    <div className="rounded-xl border border-neutral-800 bg-[#101012] p-5 text-white">
-                      <p className="font-mono text-xs text-[#f0674b]">
+                    <div className="rounded-2xl bg-[#1c140f] p-5 text-white">
+                      <p className="font-mono text-xs font-medium text-[#fb923c]">
                         {supplyStages[supplyStep].service} · {supplyStages[supplyStep].engine}
                       </p>
-                      <p className="mt-2 text-sm text-neutral-300">{supplyStages[supplyStep].note}</p>
-                      <pre className="mt-4 overflow-x-auto rounded-lg border border-neutral-800 bg-neutral-950 p-4 font-mono text-xs text-neutral-200">
+                      <p className="mt-2 text-sm text-white/80">{supplyStages[supplyStep].note}</p>
+                      <pre className="mt-4 overflow-x-auto rounded-xl border border-white/10 bg-black/40 p-4 font-mono text-xs text-white/80">
                         {supplyStages[supplyStep].payload}
                       </pre>
                     </div>
@@ -950,21 +904,23 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
 
                 {project.demoType === 'ugecam' && (
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div className="space-y-4 rounded-xl border border-neutral-200 bg-white p-5">
-                      <h3 className="font-display text-base font-semibold text-[#101012]">
-                        Grille d’évaluation
+                    <div className="space-y-4 rounded-2xl border border-black/[0.08] bg-white p-5">
+                      <h3 className="font-display text-base font-bold text-[#1c140f]">
+                        Grille d’évaluation (Valuator · UGECAM)
                       </h3>
                       {(
                         [
-                          ['ergonomie', 'Prise en main'],
-                          ['tracabilite', 'Suivi des dossiers'],
-                          ['conformite', 'Respect des critères'],
+                          ['ergonomie', 'Ergonomie & prise en main'],
+                          ['tracabilite', 'Suivi & maintenance'],
+                          ['conformite', 'Fiabilité & conformité'],
                         ] as const
                       ).map(([key, label]) => (
                         <div key={key}>
-                          <div className="flex justify-between text-xs font-medium text-neutral-700">
+                          <div className="flex justify-between text-xs font-medium text-[#5d4d42]">
                             <span>{label}</span>
-                            <span className="font-mono tabular-nums">{ugecamScores[key]} / 5</span>
+                            <span className="font-mono font-semibold tabular-nums text-[#c2410c]">
+                              {ugecamScores[key]} / 5
+                            </span>
                           </div>
                           <input
                             type="range"
@@ -977,18 +933,16 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                                 [key]: Number(e.target.value),
                               }))
                             }
-                            className="mt-1.5 w-full accent-[#c4381e]"
+                            className="mt-1.5 w-full accent-[#c2410c]"
                           />
                         </div>
                       ))}
                     </div>
 
-                    <div className="flex flex-col justify-between rounded-xl border border-[#141414]/12 bg-[#f2ede4] p-5">
+                    <div className="flex flex-col justify-between rounded-2xl bg-[#eee6d8] p-5">
                       <div>
-                        <p className="font-mono text-xs font-semibold text-[#c4381e]">
-                          Note calculée
-                        </p>
-                        <p className="mt-2 font-display text-2xl font-semibold tabular-nums text-[#101012]">
+                        <p className="text-xs font-semibold text-[#c2410c]">Synthèse calculée</p>
+                        <p className="mt-2 font-display text-2xl font-bold tabular-nums text-[#1c140f]">
                           Moyenne :{' '}
                           {(
                             (ugecamScores.ergonomie +
@@ -998,8 +952,9 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                           ).toFixed(2)}{' '}
                           / 5
                         </p>
-                        <p className="mt-2 text-sm text-neutral-700">
-                          Le score est calculé et enregistré dans l’historique de l’établissement.
+                        <p className="mt-2 text-sm text-[#5d4d42]">
+                          Le score consolidé (employés et patients) alimente les tableaux de bord
+                          de décision de l’établissement.
                         </p>
                       </div>
                     </div>
@@ -1008,18 +963,18 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
 
                 {project.demoType === 'smart-home' && (
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div className="rounded-xl border border-neutral-200 bg-white p-5">
-                      <h3 className="font-display text-base font-semibold text-[#101012]">
+                    <div className="rounded-2xl border border-black/[0.08] bg-white p-5">
+                      <h3 className="font-display text-base font-bold text-[#1c140f]">
                         Simulation d’accès connecté
                       </h3>
-                      <div className="mt-4 flex gap-2">
+                      <div className="mt-4 flex flex-wrap gap-2">
                         <button
                           type="button"
                           onClick={() => setBadgeAuthorized(true)}
-                          className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
+                          className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
                             badgeAuthorized
-                              ? 'border-[#c4381e] bg-[#101012] text-white'
-                              : 'border-neutral-200 text-neutral-700'
+                              ? 'bg-[#1c140f] text-white'
+                              : 'bg-[#eee6d8] text-[#1c140f]'
                           }`}
                         >
                           Badge actif (BADGE-014)
@@ -1027,10 +982,10 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                         <button
                           type="button"
                           onClick={() => setBadgeAuthorized(false)}
-                          className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
+                          className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
                             !badgeAuthorized
-                              ? 'border-[#c4381e] bg-[#101012] text-white'
-                              : 'border-neutral-200 text-neutral-700'
+                              ? 'bg-[#1c140f] text-white'
+                              : 'bg-[#eee6d8] text-[#1c140f]'
                           }`}
                         >
                           Badge bloqué (BADGE-992)
@@ -1039,19 +994,21 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                       <button
                         type="button"
                         onClick={handleSimulateBadge}
-                        className="mt-4 inline-flex min-h-[40px] items-center rounded-lg bg-[#c4381e] px-4 py-2 text-xs font-semibold text-white hover:bg-[#a82d16]"
+                        className="mt-4 inline-flex min-h-[40px] items-center rounded-full bg-[#fb923c] px-5 py-2 text-xs font-bold text-[#1c140f] transition-colors hover:bg-[#f97316]"
                       >
                         Simuler un passage
                       </button>
                     </div>
 
-                    <div className="rounded-xl border border-neutral-800 bg-[#101012] p-5 text-white">
-                      <p className="font-mono text-xs text-[#f0674b]">Journal des accès</p>
+                    <div className="rounded-2xl bg-[#1c140f] p-5 text-white">
+                      <p className="font-mono text-xs font-medium text-[#fb923c]">
+                        Journal des accès
+                      </p>
                       <ul className="mt-3 space-y-2 font-mono text-xs">
                         {accessLogs.map((log, i) => (
                           <li
                             key={`${log.time}-${i}`}
-                            className="rounded border border-neutral-800 bg-neutral-950/70 px-3 py-2 text-neutral-200 tabular-nums"
+                            className="rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-white/80 tabular-nums"
                           >
                             {log.time} · {log.badge} · {log.status}
                           </li>
@@ -1064,14 +1021,14 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                 {project.demoType === 'wuendjo' && (
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="flex gap-1 rounded-lg border border-neutral-200 bg-[#f2ede4] p-1">
+                      <div className="inline-flex gap-1 rounded-full bg-[#e5e7e6] p-1">
                         <button
                           type="button"
                           onClick={() => setWuendjoMode('groupe')}
-                          className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
+                          className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                             wuendjoMode === 'groupe'
-                              ? 'bg-[#101012] text-white'
-                              : 'text-neutral-700 hover:text-[#101012]'
+                              ? 'bg-[#f97316] text-[#1c140f]'
+                              : 'text-[#5d4d42] hover:text-[#1c140f]'
                           }`}
                         >
                           Voyage en groupe
@@ -1079,48 +1036,41 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                         <button
                           type="button"
                           onClick={() => setWuendjoMode('solo')}
-                          className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
+                          className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                             wuendjoMode === 'solo'
-                              ? 'bg-[#101012] text-white'
-                              : 'text-neutral-700 hover:text-[#101012]'
+                              ? 'bg-[#f97316] text-[#1c140f]'
+                              : 'text-[#5d4d42] hover:text-[#1c140f]'
                           }`}
                         >
                           Voyage en solo
                         </button>
                       </div>
 
-                      <span className="font-mono text-xs text-[#c4381e]">
-                        {wuendjoMode === 'groupe' ? 'Itinéraire partagé (4 participants)' : 'Carnet personnel (Solo)'}
+                      <span className="font-mono text-xs font-medium text-[#c2410c]">
+                        {wuendjoMode === 'groupe'
+                          ? 'Itinéraire partagé (4 participants)'
+                          : 'Carnet personnel (Solo)'}
                       </span>
                     </div>
 
-                    <div className="rounded-xl border border-neutral-200 bg-white p-5">
-                      <div className="mb-4 flex flex-wrap gap-2 text-[11px] font-mono text-neutral-600">
-                        <span className="rounded border border-neutral-200 bg-[#f2ede4]/60 px-2.5 py-1">
-                          Budget Recharts
-                        </span>
-                        <span className="rounded border border-neutral-200 bg-[#f2ede4]/60 px-2.5 py-1">
-                          Destinations, activités &amp; restaurants
-                        </span>
-                        <span className="rounded border border-neutral-200 bg-[#f2ede4]/60 px-2.5 py-1">
-                          Jeux de piste
-                        </span>
-                        <span className="rounded border border-neutral-200 bg-[#f2ede4]/60 px-2.5 py-1">
-                          Guides visas
-                        </span>
-                      </div>
+                    <div className="rounded-2xl border border-black/[0.08] bg-white p-5">
+                      <p className="mb-4 font-mono text-[11px] text-[#5d4d42]">
+                        Modules actifs : Budget Recharts · Destinations &amp; restaurants · Jeux de piste · Guides visas
+                      </p>
 
                       <div className="space-y-2.5">
                         {wuendjoSteps.map((s) => (
                           <div
                             key={`${s.day}-${s.title}`}
-                            className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-neutral-200 bg-[#f2ede4]/45 px-4 py-3 text-xs"
+                            className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-[#eee6d8] px-4 py-3 text-xs"
                           >
                             <div>
-                              <span className="font-mono font-semibold text-[#c4381e]">{s.day} · </span>
-                              <span className="font-semibold text-[#101012]">{s.title}</span>
+                              <span className="font-mono font-semibold text-[#c2410c]">
+                                {s.day} ·{' '}
+                              </span>
+                              <span className="font-semibold text-[#1c140f]">{s.title}</span>
                             </div>
-                            <span className="font-mono text-neutral-600">{s.tag}</span>
+                            <span className="font-mono text-[#5d4d42]">{s.tag}</span>
                           </div>
                         ))}
                       </div>
@@ -1131,7 +1081,7 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                           value={wuendjoNewStep}
                           onChange={(e) => setWuendjoNewStep(e.target.value)}
                           placeholder="Ajouter une étape au séjour..."
-                          className="min-w-[200px] flex-1 rounded-lg border border-neutral-300 px-3 py-2 text-xs text-[#101012] focus:border-[#c4381e] focus:outline-none"
+                          className="min-w-[200px] flex-1 rounded-xl border border-black/15 px-3.5 py-2 text-xs text-[#1c140f] focus:border-[#f97316] focus:outline-none"
                         />
                         <button
                           type="button"
@@ -1147,7 +1097,7 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                             ]);
                             setWuendjoNewStep('');
                           }}
-                          className="rounded-lg bg-[#c4381e] px-4 py-2 text-xs font-semibold text-white hover:bg-[#a82d16]"
+                          className="rounded-full bg-[#fb923c] px-4 py-2 text-xs font-bold text-[#1c140f] hover:bg-[#f97316]"
                         >
                           Ajouter l’étape
                         </button>
@@ -1158,11 +1108,11 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
 
                 {project.demoType === 'jeffrey' && (
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div className="rounded-xl border border-neutral-200 bg-white p-5">
-                      <h3 className="font-display text-base font-semibold text-[#101012]">
+                    <div className="rounded-2xl border border-black/[0.08] bg-white p-5">
+                      <h3 className="font-display text-base font-bold text-[#1c140f]">
                         Demander à Jeffrey
                       </h3>
-                      <p className="mt-1 text-xs text-neutral-600">
+                      <p className="mt-1 text-xs text-[#5d4d42]">
                         Ajoutez une tâche ou un rappel pour voir comment Jeffrey organise votre journée.
                       </p>
                       <div className="mt-4 flex gap-2">
@@ -1171,7 +1121,7 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                           value={jeffreyInput}
                           onChange={(e) => setJeffreyInput(e.target.value)}
                           placeholder="Ex. Rappeler d’envoyer le devis..."
-                          className="flex-1 rounded-lg border border-neutral-300 px-3 py-2 text-xs text-[#101012] focus:border-[#c4381e] focus:outline-none"
+                          className="flex-1 rounded-xl border border-black/15 px-3 py-2 text-xs text-[#1c140f] focus:border-[#f97316] focus:outline-none"
                         />
                         <button
                           type="button"
@@ -1183,15 +1133,17 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                             ]);
                             setJeffreyInput('');
                           }}
-                          className="rounded-lg bg-[#c4381e] px-3.5 py-2 text-xs font-semibold text-white hover:bg-[#a82d16]"
+                          className="rounded-full bg-[#fb923c] px-4 py-2 text-xs font-bold text-[#1c140f] hover:bg-[#f97316]"
                         >
                           Noter
                         </button>
                       </div>
                     </div>
 
-                    <div className="rounded-xl border border-neutral-800 bg-[#101012] p-5 text-white">
-                      <p className="font-mono text-xs text-[#f0674b]">Suivi du jour · Jeffrey</p>
+                    <div className="rounded-2xl bg-[#1c140f] p-5 text-white">
+                      <p className="font-mono text-xs font-medium text-[#fb923c]">
+                        Suivi du jour · Jeffrey
+                      </p>
                       <ul className="mt-3 space-y-2 text-xs">
                         {jeffreyTasks.map((task) => (
                           <li key={task.id}>
@@ -1204,12 +1156,16 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                                   )
                                 )
                               }
-                              className="flex w-full items-center justify-between gap-2 rounded border border-neutral-800 bg-neutral-950/70 px-3 py-2 text-left transition-colors hover:border-neutral-700"
+                              className="flex w-full items-center justify-between gap-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-left transition-colors hover:border-[#fb923c]/50"
                             >
-                              <span className={task.done ? 'line-through text-neutral-500' : 'text-neutral-200'}>
+                              <span
+                                className={
+                                  task.done ? 'line-through text-white/40' : 'text-white/85'
+                                }
+                              >
                                 {task.text}
                               </span>
-                              <span className="font-mono text-[10px] text-[#f0674b]">
+                              <span className="font-mono text-[10px] text-[#fb923c]">
                                 {task.done ? 'Fait' : 'À faire'}
                               </span>
                             </button>
@@ -1222,18 +1178,18 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
 
                 {project.demoType === 'mateconsulting' && (
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs text-neutral-600">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <span className="font-mono text-xs font-medium text-[#5d4d42]">
                         Prévisualisation du format d’écran · mateconsulting-pi.vercel.app
                       </span>
-                      <div className="flex gap-1 rounded-lg border border-neutral-200 bg-[#f2ede4] p-1">
+                      <div className="inline-flex gap-1 rounded-full bg-[#e5e7e6] p-1">
                         <button
                           type="button"
                           onClick={() => setMateViewport('desktop')}
-                          className={`rounded-md px-3 py-1.5 text-xs font-semibold ${
+                          className={`rounded-full px-3.5 py-1.5 text-xs font-semibold ${
                             mateViewport === 'desktop'
-                              ? 'bg-[#101012] text-white'
-                              : 'text-neutral-700'
+                              ? 'bg-[#f97316] text-[#1c140f]'
+                              : 'text-[#5d4d42]'
                           }`}
                         >
                           Ordinateur
@@ -1241,10 +1197,10 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                         <button
                           type="button"
                           onClick={() => setMateViewport('mobile')}
-                          className={`rounded-md px-3 py-1.5 text-xs font-semibold ${
+                          className={`rounded-full px-3.5 py-1.5 text-xs font-semibold ${
                             mateViewport === 'mobile'
-                              ? 'bg-[#101012] text-white'
-                              : 'text-neutral-700'
+                              ? 'bg-[#f97316] text-[#1c140f]'
+                              : 'text-[#5d4d42]'
                           }`}
                         >
                           Mobile
@@ -1252,17 +1208,17 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                       </div>
                     </div>
 
-                    <div className="flex justify-center rounded-xl border border-neutral-200 bg-[#f2ede4]/60 p-6">
+                    <div className="flex justify-center rounded-2xl bg-[#eee6d8] p-6">
                       <div
-                        className={`rounded-lg border border-[#141414]/15 bg-white p-5 transition-all duration-300 ${
+                        className={`rounded-2xl border border-black/[0.08] bg-white p-5 transition-all duration-300 ${
                           mateViewport === 'mobile' ? 'w-72' : 'w-full'
                         }`}
                       >
-                        <div className="flex items-center justify-between border-b border-neutral-200 pb-3">
-                          <span className="font-display text-sm font-semibold text-[#101012]">
+                        <div className="flex items-center justify-between border-b border-black/[0.07] pb-3">
+                          <span className="font-display text-sm font-bold text-[#1c140f]">
                             MATE Consulting
                           </span>
-                          <span className="font-mono text-[10px] text-[#c4381e]">
+                          <span className="font-mono text-[10px] font-semibold text-[#c2410c]">
                             Gestion financière externalisée PME/TPE
                           </span>
                         </div>
@@ -1271,16 +1227,16 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                             mateViewport === 'mobile' ? 'grid-cols-1' : 'grid-cols-3'
                           }`}
                         >
-                          <div className="rounded bg-[#101012] p-3 text-white">
-                            <p className="font-mono text-[10px] text-[#f0674b]">01</p>
+                          <div className="rounded-xl bg-[#1c140f] p-3 text-white">
+                            <p className="font-mono text-[10px] text-[#fb923c]">01</p>
                             <p className="mt-1 text-xs font-semibold">Précomptabilité agile</p>
                           </div>
-                          <div className="rounded border border-neutral-200 bg-[#f2ede4]/55 p-3 text-[#101012]">
-                            <p className="font-mono text-[10px] text-[#c4381e]">02</p>
+                          <div className="rounded-xl bg-[#eee6d8] p-3 text-[#1c140f]">
+                            <p className="font-mono text-[10px] text-[#c2410c]">02</p>
                             <p className="mt-1 text-xs font-semibold">Aide à la décision</p>
                           </div>
-                          <div className="rounded border border-neutral-200 bg-white p-3 text-[#101012]">
-                            <p className="font-mono text-[10px] text-[#c4381e]">03</p>
+                          <div className="rounded-xl border border-black/[0.08] bg-white p-3 text-[#1c140f]">
+                            <p className="font-mono text-[10px] text-[#c2410c]">03</p>
                             <p className="mt-1 text-xs font-semibold">Échange de 30 min</p>
                           </div>
                         </div>
@@ -1292,7 +1248,7 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                 {project.demoType === 'creative-glitch' && (
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="flex gap-1 rounded-lg border border-neutral-200 bg-[#f2ede4] p-1">
+                      <div className="inline-flex gap-1 rounded-full bg-[#e5e7e6] p-1">
                         {(
                           [
                             ['sommaire', 'Au sommaire'],
@@ -1304,10 +1260,10 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                             key={key}
                             type="button"
                             onClick={() => setGlitchRubric(key)}
-                            className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
+                            className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                               glitchRubric === key
-                                ? 'bg-[#101012] text-white'
-                                : 'text-neutral-700 hover:text-[#101012]'
+                                ? 'bg-[#f97316] text-[#1c140f]'
+                                : 'text-[#5d4d42] hover:text-[#1c140f]'
                             }`}
                           >
                             {label}
@@ -1315,38 +1271,38 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                         ))}
                       </div>
 
-                      <span className="font-mono text-xs text-[#c4381e]">
+                      <span className="font-mono text-xs font-medium text-[#c2410c]">
                         creative-glitch.vercel.app
                       </span>
                     </div>
 
-                    <div className="rounded-xl border border-neutral-200 bg-[#f2ede4]/55 p-5">
-                      <div className="border-b border-[#141414]/12 pb-3 flex items-baseline justify-between gap-4">
-                        <span className="font-display text-lg font-semibold text-[#101012]">
+                    <div className="rounded-2xl bg-[#eee6d8] p-5">
+                      <div className="flex items-baseline justify-between gap-4 border-b border-black/[0.08] pb-3">
+                        <span className="font-display text-lg font-bold text-[#1c140f]">
                           GLITCH Magazine
                         </span>
-                        <span className="font-mono text-[11px] text-neutral-600">
+                        <span className="font-mono text-[11px] text-[#5d4d42]">
                           Quand la confidence a besoin d’un prétexte.
                         </span>
                       </div>
 
                       {glitchRubric === 'sommaire' && (
                         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                          <div className="rounded-lg border border-[#141414]/12 bg-white p-3.5">
-                            <p className="font-mono text-[10px] text-[#c4381e]">VOLUME</p>
-                            <p className="mt-1 text-xs font-semibold text-[#101012]">
+                          <div className="rounded-xl bg-white p-3.5">
+                            <p className="font-mono text-[10px] font-semibold text-[#c2410c]">VOLUME</p>
+                            <p className="mt-1 text-xs font-semibold text-[#1c140f]">
                               Numéros &amp; dossiers
                             </p>
                           </div>
-                          <div className="rounded-lg border border-[#141414]/12 bg-white p-3.5">
-                            <p className="font-mono text-[10px] text-[#c4381e]">JOURNAL</p>
-                            <p className="mt-1 text-xs font-semibold text-[#101012]">
+                          <div className="rounded-xl bg-white p-3.5">
+                            <p className="font-mono text-[10px] font-semibold text-[#c2410c]">JOURNAL</p>
+                            <p className="mt-1 text-xs font-semibold text-[#1c140f]">
                               Récits &amp; chroniques
                             </p>
                           </div>
-                          <div className="rounded-lg border border-[#141414]/12 bg-white p-3.5">
-                            <p className="font-mono text-[10px] text-[#c4381e]">COURRIER</p>
-                            <p className="mt-1 text-xs font-semibold text-[#101012]">
+                          <div className="rounded-xl bg-white p-3.5">
+                            <p className="font-mono text-[10px] font-semibold text-[#c2410c]">COURRIER</p>
+                            <p className="mt-1 text-xs font-semibold text-[#1c140f]">
                               Écrire à GLITCH
                             </p>
                           </div>
@@ -1354,9 +1310,11 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                       )}
 
                       {glitchRubric === 'journal' && (
-                        <div className="mt-4 rounded-lg border border-[#141414]/12 bg-white p-4">
-                          <p className="font-mono text-[11px] text-[#c4381e]">Dans le journal</p>
-                          <p className="mt-1.5 text-sm text-neutral-800 leading-relaxed">
+                        <div className="mt-4 rounded-xl bg-white p-4">
+                          <p className="font-mono text-[11px] font-semibold text-[#c2410c]">
+                            Dans le journal
+                          </p>
+                          <p className="mt-1.5 text-sm leading-relaxed text-[#5d4d42]">
                             Mise en page éditoriale centrée sur la lecture longue, les chroniques
                             personnelles et l’archive par volumes thématiques.
                           </p>
@@ -1364,11 +1322,11 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                       )}
 
                       {glitchRubric === 'notes' && (
-                        <div className="mt-4 rounded-lg border border-neutral-800 bg-[#101012] p-4 text-white">
-                          <p className="font-mono text-[11px] text-[#f0674b]">
+                        <div className="mt-4 rounded-xl bg-[#1c140f] p-4 text-white">
+                          <p className="font-mono text-[11px] font-medium text-[#fb923c]">
                             Notes &amp; Confidences
                           </p>
-                          <p className="mt-1.5 text-sm text-neutral-200 leading-relaxed">
+                          <p className="mt-1.5 text-sm leading-relaxed text-white/80">
                             Une confidence, une question ? L’espace courrier permet aux lecteurs
                             d’écrire directement au magazine en ligne.
                           </p>
@@ -1380,13 +1338,13 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
 
                 {project.demoType === 'zone-groupe' && (
                   <div className="space-y-4">
-                    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-200 pb-4">
+                    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/[0.08] pb-4">
                       <div>
-                        <p className="font-mono text-xs text-[#c4381e]">
+                        <p className="font-mono text-xs font-medium text-[#c2410c]">
                           Boutique en ligne · zone-groupe-sigma.vercel.app
                         </p>
-                        <h3 className="mt-1 font-display text-lg font-semibold text-[#101012]">
-                          Zone Groupe — L’électronique au juste prix
+                        <h3 className="mt-1 font-display text-lg font-bold text-[#1c140f]">
+                          Zone Groupe : L’électronique au juste prix
                         </h3>
                       </div>
                       {project.liveUrl && (
@@ -1394,7 +1352,7 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                           href={project.liveUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex min-h-[40px] items-center gap-2 rounded-lg bg-[#c4381e] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#a82d16]"
+                          className="inline-flex min-h-[40px] items-center gap-2 rounded-full bg-[#fb923c] px-5 py-2 text-xs font-bold text-[#1c140f] transition-colors hover:bg-[#f97316]"
                         >
                           Ouvrir la boutique
                           <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
@@ -1403,18 +1361,18 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                     </div>
 
                     <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                      <div className="rounded-xl border border-neutral-200 bg-white p-5">
-                        <p className="font-mono text-xs font-semibold text-[#101012]">
+                      <div className="rounded-2xl border border-black/[0.08] bg-white p-5">
+                        <p className="font-mono text-xs font-semibold text-[#1c140f]">
                           Simulation de négociation directe
                         </p>
-                        <p className="mt-1 text-xs text-neutral-600">
+                        <p className="mt-1 text-xs text-[#5d4d42]">
                           Exemple d’offre tarifaire préparée avant validation avec le vendeur sur
                           WhatsApp.
                         </p>
                         <div className="mt-4">
-                          <div className="flex justify-between text-xs font-medium text-neutral-700">
+                          <div className="flex justify-between text-xs font-medium text-[#5d4d42]">
                             <label htmlFor="zone-price">Proposition client (FCFA)</label>
-                            <span className="font-mono font-semibold text-[#c4381e] tabular-nums">
+                            <span className="font-mono font-semibold text-[#c2410c] tabular-nums">
                               {zoneProposedPrice.toLocaleString('fr-FR')} FCFA
                             </span>
                           </div>
@@ -1426,19 +1384,19 @@ export function CaseStudyModal({ project, initialTab, onClose }: CaseStudyModalP
                             step={2500}
                             value={zoneProposedPrice}
                             onChange={(e) => setZoneProposedPrice(Number(e.target.value))}
-                            className="mt-2 w-full accent-[#c4381e]"
+                            className="mt-2 w-full accent-[#c2410c]"
                           />
                         </div>
                       </div>
 
-                      <div className="rounded-xl border border-neutral-800 bg-[#101012] p-5 text-white">
-                        <p className="font-mono text-xs text-[#f0674b]">
+                      <div className="rounded-2xl bg-[#1c140f] p-5 text-white">
+                        <p className="font-mono text-xs font-medium text-[#fb923c]">
                           Récapitulatif WhatsApp vendeur
                         </p>
-                        <p className="mt-3 rounded border border-neutral-800 bg-neutral-950 p-3 font-mono text-xs leading-relaxed text-neutral-200">
+                        <p className="mt-3 rounded-xl border border-white/10 bg-black/40 p-3 font-mono text-xs leading-relaxed text-white/80">
                           {zoneProposedPrice >= 110000
-                            ? `Offre acceptée (${zoneProposedPrice.toLocaleString('fr-FR')} FCFA) → Commande prête à finaliser sur WhatsApp.`
-                            : `Proposition (${zoneProposedPrice.toLocaleString('fr-FR')} FCFA) → Contre-offre transmise au gérant en direct.`}
+                            ? `Offre acceptée (${zoneProposedPrice.toLocaleString('fr-FR')} FCFA) -> Commande prête à finaliser sur WhatsApp.`
+                            : `Proposition (${zoneProposedPrice.toLocaleString('fr-FR')} FCFA) -> Contre-offre transmise au gérant en direct.`}
                         </p>
                       </div>
                     </div>
