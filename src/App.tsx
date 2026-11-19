@@ -1,58 +1,67 @@
-import { useState } from 'react';
-import { AnimatePresence, MotionConfig } from 'motion/react';
+import { useEffect, useState } from 'react';
+import { MotionConfig } from 'motion/react';
 import { AboutSection } from './components/AboutSection';
-import { CaseStudyModal } from './components/CaseStudyModal';
+import { CommandPalette } from './components/CommandPalette';
 import { ContactSection } from './components/ContactSection';
-import { ExperienceSection } from './components/ExperienceSection';
 import { Footer } from './components/Footer';
-import { GitHubActivitySection } from './components/GitHubActivitySection';
 import { HeroSection } from './components/HeroSection';
 import { Navbar } from './components/Navbar';
 import { ProjectsSection } from './components/ProjectsSection';
-import { PublicationsSection } from './components/PublicationsSection';
 import { SkillsSection } from './components/SkillsSection';
-import { ProjectCaseStudy } from './data/portfolioData';
+import { ProjectId } from './data/portfolioData';
 
 export default function App() {
-  const [selectedProject, setSelectedProject] = useState<ProjectCaseStudy | null>(null);
-  const [modalInitialTab, setModalInitialTab] = useState<'case-study' | 'demo'>('case-study');
+  const [commandOpen, setCommandOpen] = useState(false);
+  const [activeProject, setActiveProject] = useState<ProjectId>('digital-twin');
+  const [viewMode, setViewMode] = useState<'stage' | 'all'>('stage');
 
-  const handleSelectProject = (
-    project: ProjectCaseStudy,
-    initialTab: 'case-study' | 'demo'
-  ) => {
-    setModalInitialTab(initialTab);
-    setSelectedProject(project);
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        setCommandOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleSelectProjectFromPalette = (projectId: string) => {
+    setActiveProject(projectId as ProjectId);
+    setViewMode('stage');
+    window.requestAnimationFrame(() => {
+      const target = document.getElementById('projets');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
   };
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="min-h-screen bg-[#eee6d8] text-[#1c140f]">
+      <div className="min-h-screen bg-[#F5F5F3] text-[#334155]">
         <Navbar />
 
         <main>
-          <HeroSection />
+          <HeroSection onOpenCommandMenu={() => setCommandOpen(true)} />
           <AboutSection />
-          <ProjectsSection onSelectProject={handleSelectProject} />
+          <ProjectsSection
+            activeProject={activeProject}
+            viewMode={viewMode}
+            onSelectProject={setActiveProject}
+            onChangeViewMode={setViewMode}
+          />
           <SkillsSection />
-          <ExperienceSection />
-          <GitHubActivitySection />
-          <PublicationsSection />
           <ContactSection />
         </main>
 
         <Footer />
 
-        <AnimatePresence>
-          {selectedProject && (
-            <CaseStudyModal
-              key={selectedProject.id}
-              project={selectedProject}
-              initialTab={modalInitialTab}
-              onClose={() => setSelectedProject(null)}
-            />
-          )}
-        </AnimatePresence>
+        <CommandPalette
+          open={commandOpen}
+          onClose={() => setCommandOpen(false)}
+          onSelectProject={handleSelectProjectFromPalette}
+        />
       </div>
     </MotionConfig>
   );

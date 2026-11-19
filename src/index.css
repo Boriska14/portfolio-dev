@@ -1,66 +1,112 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Bricolage Grotesque", "Plus Jakarta Sans", -apple-system, sans-serif;
-  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --color-mist: #e5e7e6;
-  --color-linen: #eee6d8;
-  --color-orange-brand: #f97316;
-  --color-orange-soft: #fb923c;
-  --color-orange-deep: #c2410c;
-  --color-espresso: #1c140f;
-  --color-espresso-soft: #261b14;
-  --color-muted-umber: #5d4d42;
+  --color-analog: #f5f5f3;
+  --color-sheet: #ffffff;
+  --color-ink: #0f172a;
+  --color-body: #334155;
+  --color-muted: #64748b;
+  --color-accent: #1e40af;
+  --color-link: #2563eb;
+  --color-link-soft: #eff6ff;
+  --color-border: #e2e8f0;
 }
 
 @layer base {
   html {
     font-family: var(--font-sans);
-    scroll-padding-top: 4.5rem;
+    scroll-padding-top: 5rem;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color: var(--color-body);
+    background-color: var(--color-analog);
   }
 
   h1,
   h2,
   h3,
   h4 {
-    font-family: var(--font-display);
+    font-family: var(--font-sans);
     text-wrap: balance;
   }
 }
 
-.fluid-glow-dark {
-  background-image:
-    radial-gradient(58% 52% at 85% 12%, rgba(249, 115, 22, 0.14), transparent 70%),
-    radial-gradient(45% 45% at 10% 90%, rgba(194, 65, 12, 0.14), transparent 65%);
+.analog-canvas {
+  background-color: #f5f5f3;
 }
 
-@keyframes marqueeScroll {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+.bp-sheet {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  transition: border-color 220ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marqueeScroll 36s linear infinite;
+.bp-sheet:hover {
+  border-color: #cbd5e1;
 }
 
-.marquee-track:hover {
-  animation-play-state: paused;
+/* Bulletproof-inspired smooth cubic-bezier(0.19, 1, 0.22, 1) hover row */
+.bp-work-row {
+  position: relative;
+  transition:
+    transform 240ms cubic-bezier(0.19, 1, 0.22, 1),
+    color 200ms cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 200ms ease;
+}
+
+.bp-work-row:hover,
+.bp-work-row:focus-visible {
+  transform: translateX(8px);
+}
+
+/* Rolling arrow micro-interaction */
+.bp-btn-arrow {
+  transition: transform 220ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.group:hover .bp-btn-arrow,
+a:hover .bp-btn-arrow,
+button:hover .bp-btn-arrow {
+  transform: translate(2px, -2px);
+}
+
+.index-row-line {
+  position: relative;
+  height: 1px;
+  background-color: #e2e8f0;
+}
+
+.index-row-line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #1e40af;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 280ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.group:hover .index-row-line::after,
+.group:focus-visible .index-row-line::after {
+  transform: scaleX(1);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none;
+  .bp-work-row:hover,
+  .bp-work-row:focus-visible,
+  .group:hover .bp-btn-arrow,
+  a:hover .bp-btn-arrow,
+  button:hover .bp-btn-arrow {
+    transform: none;
   }
 
   *,

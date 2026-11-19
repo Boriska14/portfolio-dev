@@ -1,966 +1,745 @@
-export type ProjectCategory = 'Professionnel' | 'Académique' | 'Personnel';
+export type ProjectId =
+  | 'digital-twin'
+  | 'track-sentry-vision'
+  | 'eneo'
+  | 'supply-chain'
+  | 'smart-home'
+  | 'jeffrey'
+  | 'wuendjo'
+  | 'mate-consulting';
 
-export interface ArchitectureLayer {
-  layer: string;
-  component: string;
-  detail: string;
+export interface DiagramNode {
+  id: string;
+  label: string;
+  sublabel: string;
+  emphasis?: 'primary' | 'secondary' | 'neutral';
 }
 
-export interface ProjectCaseStudy {
+export interface ProjectEntry {
+  id: ProjectId;
+  index: string;
+  shortTitle: string;
+  title: string;
+  categoryLabel: string;
+  period: string;
+  summary: string;
+  context: string;
+  objective: string;
+  role: string;
+  architectureNote: string;
+  diagramNodes: DiagramNode[];
+  diagramFooter: string;
+  realisation: string;
+  result: string;
+  nextAndLearnings: string;
+  technologies: string[];
+  liveUrl?: string;
+  liveLabel?: string;
+  previewImage?: string;
+}
+
+export interface ArchiveRowItem {
   id: string;
+  index: string;
   title: string;
   subtitle: string;
-  category: ProjectCategory;
-  period: string;
-  country: 'Cameroun' | 'France' | 'Belgique';
   context: string;
-  domain: string;
-  summary: string;
-  problem: string;
-  architectureSummary: string;
-  architectureLayers: ArchitectureLayer[];
-  technologies: string[];
-  role: string;
-  challenges: string[];
-  results: string[];
-  demoType:
-    | 'umons-tsv'
-    | 'eneo'
-    | 'digital-twin'
-    | 'supply-chain'
-    | 'sparte-biometric'
-    | 'ugecam'
-    | 'smart-home'
-    | 'wuendjo'
-    | 'jeffrey'
-    | 'mateconsulting'
-    | 'creative-glitch'
-    | 'zone-groupe';
-  repoUrl: string;
+  period: string;
+  tags: string[];
+  detail: string;
   liveUrl?: string;
   previewImage?: string;
 }
 
-export interface SkillGroup {
-  id: string;
-  title: string;
-  description: string;
-  items: {
-    name: string;
-    context: string;
-  }[];
-}
-
-export interface ExperienceItem {
-  id: string;
-  type: 'Professionnel' | 'Académique';
-  country: 'Cameroun' | 'France' | 'Belgique';
+export interface ExperienceRow {
   period: string;
   role: string;
   organization: string;
   location: string;
-  focus: string;
-  summary: string;
-  deliverables: string[];
-  stack: string[];
+  highlight: string;
 }
 
-export interface EngagementItem {
+export interface CompetenceAxis {
   id: string;
-  category: string;
+  index: string;
   title: string;
-  context: string;
-  detail: string;
-}
-
-export interface CertificationItem {
-  name: string;
-  issuer: string;
-  date: string;
-}
-
-export interface ServiceItem {
-  number: string;
-  title: string;
-  summary: string;
-  reference: string;
+  subtitle: string;
+  domains: {
+    label: string;
+    detail: string;
+  }[];
 }
 
 export const PROFILE = {
   fullName: 'Boriska Mbilongo',
-  title: 'Ingénieure informatique : Développement applicatif, IoT & Cloud',
-  school: 'UCAC-ICAM · Diplôme d’ingénieur en informatique et management des systèmes d’information (CTI, 2026)',
-  location: 'Cameroun.France.Belgique · Mobilité internationale',
-  phone: '+237 657 571 091',
+  heroTitle:
+    'Ingénieure en conception et intégration de solutions numériques – IoT, Cloud & Informatique industrielle',
+  heroTagline:
+    'Je conçois et j’intègre des solutions techniques qui relient le monde physique aux systèmes numériques.',
+  aboutLead:
+    'Ingénieure en systèmes d’information orientée conception et intégration de solutions numériques, avec un intérêt marqué pour l’IoT, le cloud et l’informatique industrielle.',
+  aboutJourney:
+    'Diplômée de l’UCAC-ICAM en informatique et management des systèmes d’information (titre CTI 2026), j’ai évolué entre le Cameroun, la France et la Belgique en conjuguant génie logiciel, systèmes connectés et transformation numérique (notamment comme consultante en transformation digitale chez MINERVE Share and Grow).',
+  aboutApproach:
+    'Mon approche repose sur le concret : partir du besoin opérationnel sur le terrain, prototyper rapidement pour lever les risques techniques, intégrer proprement capteurs, API et bases de données, puis structurer des systèmes fiables et reproductibles.',
+  aboutBalance:
+    'Je privilégie des projets utiles, techniquement exigeants et menés dans un rythme de travail soutenable qui préserve la qualité de conception dans la durée.',
   email: 'danya-maylis.mbilongo@2026.icam.fr',
-  githubUrl: 'https://github.com/boriska-mbilongo',
+  phone: '+237 657 571 091',
+  location: 'Cameroun · France · Belgique',
   linkedinUrl: 'https://www.linkedin.com/in/boriska-mbilongo',
-  heroGreeting: 'Boriska Mbilongo · Ingénieure informatique',
-  heroHeadline:
-    'Développer des logiciels fiables, des objets connectés jusqu’au Cloud.',
-  bioLead:
-    'Ingénieure diplômée de l’UCAC-ICAM (titre CTI, 2026), j’ai travaillé et étudié entre le Cameroun, la France et la Belgique. J’aime partir d’un problème concret : vérifier des données sensibles, automatiser des processus critiques ou suivre l’état d’un rail, pour écrire un logiciel clair et utile sur le terrain.',
-  bioSecondary:
-    'Je travaille principalement en Python (Django, Flask, FastAPI, PyTorch), Java et Node.js/React, avec une vraie curiosité pour l’embarqué (microcontrôleurs PIC, Arduino, Raspberry Pi), la vision par ordinateur, les bases PostgreSQL/MongoDB et Docker.',
+  githubUrl: 'https://github.com/boriska-mbilongo',
+  closingQuote:
+    'Une carrière ambitieuse doit financer la liberté de vivre, pas la remplacer.',
 };
 
-export const KEY_OUTCOMES = [
+export const PUBLICATION = {
+  title:
+    'Towards Sustainable Digital Transformation in SMEs: Integrating IoT, Digital Twins, and AI for Enhanced Manufacturing Efficiency',
+  authors: 'Zeina Elrawashdeh, Paul-Eric Dossou & Boriska Mbilongo',
+  venue: 'Actes de FAIM 2025 · Springer Nature',
+  roleSummary:
+    'Intervention et co-écriture sur l’intégration pragmatique de l’IoT, des jumeaux numériques modulaires (Flask, RabbitMQ, MongoDB, Docker) et de la maintenance prédictive pour les PME industrielles.',
+  url: 'https://www.researchgate.net/publication/397657540_Towards_Sustainable_Digital_Transformation_in_SMEs_Integrating_IoT_Digital_Twins_and_AI_for_Enhanced_Manufacturing_Efficiency',
+};
+
+export const KEY_RESULTS = [
+  { metric: '-80 %', label: 'd’erreurs de traitement automatisé' },
+  { metric: '-30 %', label: 'temps de déploiement via CI/CD' },
+  { metric: '+15 %', label: 'performances applicatives mesurées' },
+];
+
+export const STRATEGIC_PILLARS = [
   {
-    value: '-80 %',
-    label: 'd’erreurs de traitement',
-    context: 'Réconciliation des ventes automatisée chez ENEO',
+    index: '01',
+    keyword: 'Fiabilité',
+    title: 'Fiabiliser les flux critiques',
+    description:
+      'Transformer les contrôles manuels et traitements dispersés en applications métier auditées et mesurables.',
   },
   {
-    value: '-30 %',
-    label: 'de temps de déploiement',
-    context: 'Pipelines CI/CD mis en place chez ENEO',
+    index: '02',
+    keyword: 'Continuité',
+    title: 'Relier terrain, IoT & Cloud',
+    description:
+      'Connecter capteurs, microcontrôleurs et simulateurs aux systèmes d’information via MQTT, RabbitMQ et API REST.',
   },
   {
-    value: '+15 %',
-    label: 'de performances applicatives',
-    context: 'Optimisation Django et PostgreSQL',
-  },
-  {
-    value: '3 pays',
-    label: 'd’expérience terrain',
-    context: 'Cameroun.France.Belgique',
+    index: '03',
+    keyword: 'Impact',
+    title: 'Livrer des architectures durables',
+    description:
+      'Concevoir des services modulaires conteneurisés sous Docker, testés et prêts à évoluer avec les équipes.',
   },
 ];
 
-export const PROJECTS: ProjectCaseStudy[] = [
+export const WORKFLOW_STEPS = [
   {
-    id: 'umons-track-sentry-vision',
-    title: 'Track Sentry Vision : Surveillance ferroviaire intelligente',
-    subtitle: 'Architecture Edge-to-Cloud temps réel & Deep Learning ferroviaire (DualSightNet / RT-DETR)',
-    category: 'Académique',
-    period: '02/2026 – 07/2026',
+    step: '01',
+    phase: 'Diagnostic & Cadrage',
+    summary:
+      'Immersion auprès des équipes métier ou recherche pour clarifier les contraintes terrain, modéliser les données (UML, Merise, GRAI) et prioriser l’essentiel.',
+    outputs: 'Spécifications · Modèles de données · Architecture cible',
+  },
+  {
+    step: '02',
+    phase: 'Prototypage ciblé',
+    summary:
+      'Validation rapide de la chaîne critique (lecteur matériel, flux MQTT/RabbitMQ, API ou modèle) afin de lever les risques techniques au plus tôt.',
+    outputs: 'Preuve de concept · Contrats d’API · Tests de charge',
+  },
+  {
+    step: '03',
+    phase: 'Architecture & Intégration',
+    summary:
+      'Développement modulaire en Python (Django, Flask, FastAPI), Java ou Node.js/React avec persistance SQL/NoSQL adaptée à chaque usage.',
+    outputs: 'Services découplés · PostgreSQL / MongoDB · Interfaces web',
+  },
+  {
+    step: '04',
+    phase: 'Industrialisation & Transfert',
+    summary:
+      'Conteneurisation reproductible Docker, automatisation CI/CD sous GitLab, tests automatisés et documentation claire pour la reprise en équipe.',
+    outputs: 'Docker Compose · Pipelines GitLab CI/CD · Documentation',
+  },
+];
+
+export const HUB_LOCATIONS = [
+  {
+    city: 'Douala · Yaoundé',
+    country: 'Cameroun',
+    scope: 'Ancrage initial, missions DSI & transformation digitale.',
+  },
+  {
+    city: 'Grand Paris Sud',
+    country: 'France',
+    scope: 'Cursus ingénieur CTI & recherche Industrie 4.0.',
+  },
+  {
+    city: 'Mons',
     country: 'Belgique',
-    context: 'UMONS · Faculté Polytechnique (Polytech Mons), Belgique',
-    domain: 'Surveillance ferroviaire · Edge-to-Cloud & Vision par ordinateur',
-    summary:
-      'Projet Track Sentry Vision mené à l’UMONS (dir. Prof. Saïd Mahmoudi & Tanguy Vansnick) : plateforme complète de surveillance ferroviaire combinant l’acquisition temps réel Edge-to-Cloud de capteurs multimodaux (vibrations, acoustique, température) et des modèles Deep Learning pour la classification des défauts du rail (DualSightNet) et la détection d’obstacles (RT-DETR).',
-    problem:
-      'La surveillance ferroviaire doit traiter simultanément des flux capteurs hétérogènes au plus près de la voie et détecter par vision des défauts rares (ratio jusqu’à 1:354 sur RailSurface-7) ou des obstacles sous contrainte temps réel (< 100 ms), tout en limitant le coût d’annotation.',
-    architectureSummary:
-      'Chaîne complète reliant l’acquisition Edge-to-Cloud en Python (capteurs multimodaux, synchronisation, MQTT/Docker) à deux pipelines PyTorch 2.0 / CUDA : DualSightNet (ResNet50 + Swin-Tiny + ECA) et RT-DETR piloté par Active Learning (Diversity Sampling K-Means).',
-    architectureLayers: [
-      {
-        layer: '01 · Terrain & Edge-to-Cloud',
-        component: 'Capteurs multimodaux & modules Python',
-        detail: 'Acquisition, synchronisation temporelle et remontée temps réel des signaux vibratoires, acoustiques et thermiques de la voie vers le Cloud (MQTT, Docker).',
-      },
-      {
-        layer: '02 · Classification des rails',
-        component: 'DualSightNet (ResNet50 + Swin-Tiny + ECA)',
-        detail: 'Fusion dynamique via gate paramétrique, Geometry Attention multi-têtes et convolutions à dilatations (1, 2, 3) avec Focal Loss pondérée sur RailSurface-7 (8 classes en vue frontale et verticale).',
-      },
-      {
-        layer: '03 · Détection & Active Learning',
-        component: 'RT-DETR + Diversity Sampling (K-Means)',
-        detail: 'Détection temps réel sur 5 classes d’obstacles à 18,2 ms/image (55 FPS) sur SynRailObs : amorçage sur 600 images et sélection par lots de 75 images pour atteindre 90,8 % mAP@50:95 en 6 itérations.',
-      },
+    scope: 'Échange universitaire & systèmes ferroviaires connectés.',
+  },
+];
+
+export const CERTIFICATIONS_AND_ENGAGEMENTS = [
+  {
+    group: 'Formation & Certifications',
+    items: [
+      'Diplôme d’ingénieur en informatique et management des SI (Titre CTI) · UCAC-ICAM, 2026',
+      'CCNA (Cisco Certified Network Associate) · Cisco Networking Academy, fév. 2023',
+      'Internet of Things Fundamentals (IoT) · Udemy, fév. 2024',
+      'TOEIC Anglais B2 (niveau professionnel) · ETS, fév. 2024',
     ],
-    technologies: ['Python', 'PyTorch 2.0', 'CUDA', 'Edge-to-Cloud', 'MQTT', 'Docker', 'ResNet50', 'Swin-Tiny', 'RT-DETR', 'Active Learning'],
-    role: 'Développement des modules Python Edge-to-Cloud de traitement des capteurs multimodaux et conception expérimentale complète du TFE (DualSightNet, RT-DETR, validation croisée 5 folds, études d’ablation, analyse du reality gap).',
-    challenges: [
-      'Aligner dans le temps des flux capteurs multimodaux à fréquences différentes tout en maintenant un faible délai Edge-to-Cloud.',
-      'Gérer un déséquilibre extrême de classes (8 images pour Grooves contre 2 830 pour Flakings) via Focal Loss pondérée et validation croisée stratifiée.',
-      'Éviter la stagnation de l’incertitude pure (67,6 % mAP) grâce au Diversity Sampling et mesurer le reality gap synthétique → réel (71,2 % sur 50 images réelles).',
-    ],
-    results: [
-      'Chaîne Edge-to-Cloud opérationnelle intégrée à la plateforme Track Sentry Vision de l’UMONS.',
-      '98,0 % Balanced Accuracy (± 0,007) et 0,940 F1 pondéré en vue frontale (+15,5 pts vs EfficientNet-B0), avec +23,8 pts F1 sur Joints et +23,6 pts sur Grooves.',
-      '90,8 % mAP@50:95 sur SynRailObs en 6 itérations (1 050 images) à 55 FPS, réduisant de 30 à 40 % l’effort d’annotation.',
-    ],
-    demoType: 'umons-tsv',
-    repoUrl: 'https://github.com/boriska-mbilongo',
   },
   {
-    id: 'eneo-rapprochement',
-    title: 'ENEO : Application de réconciliation des ventes',
-    subtitle: 'Django / PostgreSQL, modélisation UML & Merise, 4 modules métier et CI/CD',
-    category: 'Professionnel',
-    period: '08/01/2024 – 29/03/2024',
-    country: 'Cameroun',
-    context: 'ENEO Cameroon · DISI / DASI (équipe BSOF), Douala',
-    domain: 'Développement Full Stack & DevOps',
-    summary:
-      'Conception et réalisation d’une application de réconciliation des ventes au sein de l’équipe BSOF (Business Service and Others Functions) de la DISI/DASI d’ENEO Cameroon, pour fiabiliser le rapprochement entre factures, encaissements et compteurs d’électricité.',
-    problem:
-      'Le processus manuel de réconciliation entre données de ventes (post-paiement, prépaiement, agences, my.eneocameroon.cm, Mobile Money) et compteurs entraînait lenteurs, fautes de saisie, absence de traçabilité et retards de facturation.',
-    architectureSummary:
-      'Application web modélisée en UML (3 rôles : Administrateur, Utilisateur standard, Partenaire) et Merise (MCD/MCT), structurée en 4 modules sous Django et PostgreSQL avec pipelines CI/CD.',
-    architectureLayers: [
-      {
-        layer: '01 · Importation CSV',
-        component: 'Mappage & validation des flux',
-        detail: 'Import en masse et incrémentiel de fichiers CSV, mappage dynamique des champs et détection des erreurs de format ou valeurs aberrantes.',
-      },
-      {
-        layer: '02 · Rapprochement & Alertes',
-        component: 'Moteur automatique & assisté',
-        detail: 'Algorithmes de rapprochement automatique ou manuel assisté, validation par lots, gestion des exceptions et alertes sur écarts/doublons.',
-      },
-      {
-        layer: '03 · Rapports & CI/CD',
-        component: 'Tableaux de bord, audit & GitLab',
-        detail: 'Visualisation des ventes réconciliées, exports CSV/PDF/Excel, journalisation (piste d’audit), droits d’accès par rôle et déploiement continu.',
-      },
+    group: 'Conseil & Engagements',
+    items: [
+      'Consultante en transformation digitale (temps partiel) · MINERVE Share and Grow (2024–2026)',
+      'Intervenante Girls in ICT Day · Institut français du Cameroun, Douala (avril 2024)',
+      'You Give « Un Cartable, Un Sourire » · Collecte de 400 000 FCFA pour 22 enfants (2026)',
+      'Communication digitale (Likabo, Djine Care, Linnov) & collectif étudiant COCFET / ARIS',
     ],
-    technologies: ['Python', 'Django', 'PostgreSQL', 'UML', 'Merise', 'Jira Software', 'CI/CD', 'GitLab'],
-    role: 'Stagiaire à la DISI/DASI (BSOF), encadrée par M. Humphrey Ojong (ENEO) et M. Karl Nyabe (UCAC-ICAM) : analyse des besoins, modélisation UML/Merise, développement des 4 modules en Django/PostgreSQL et mise en place des pipelines CI/CD.',
-    challenges: [
-      'Harmoniser des fichiers de ventes hétérogènes (post-paiement, prépayé, Mobile Money) via un moteur de mappage CSV flexible.',
-      'Gérer 3 profils d’utilisation distincts (Administrateur, Utilisateur standard, Partenaire) avec piste d’audit complète.',
-      'Optimiser les requêtes PostgreSQL pour réduire la latence des rapprochements et tableaux de bord.',
-    ],
-    results: [
-      '80 % d’erreurs de traitement en moins grâce à la réconciliation automatisée des ventes.',
-      '30 % de temps gagné sur les déploiements avec les pipelines CI/CD.',
-      '15 % de performances applicatives en plus sur les opérations internes.',
-    ],
-    demoType: 'eneo',
-    repoUrl: 'https://github.com/boriska-mbilongo',
   },
+];
+
+export const PROJECTS: ProjectEntry[] = [
   {
-    id: 'digital-twin-predictive',
-    title: 'Jumeau numérique : Cas de la salle LIFE (ICAM Grand Paris Sud)',
-    subtitle: 'Python / Flask, SCRAM via RabbitMQ, simulations ROS / Gazebo & MongoDB',
-    category: 'Académique',
+    id: 'digital-twin',
+    index: '01',
+    shortTitle: 'Jumeau numérique',
+    title: 'Jumeau numérique – Plateforme robotique LIFE',
+    categoryLabel: 'Projet académique 4e année & Recherche · ICAM Grand Paris Sud',
     period: '09/2024 – 02/2025',
-    country: 'France',
-    context: 'ICAM Grand Paris Sud Europe · Supervision : M. Paul-Eric Dossou',
-    domain: 'Recherche & Industrie 4.0',
     summary:
-      'Mission scientifique de recherche de 5 mois à l’ICAM Grand Paris Sud sur la conception et l’implémentation d’un jumeau numérique de la plateforme robotique LIFE (salle LIFE), reliant simulations ROS/Gazebo, broker RabbitMQ (SCRAM), API Flask et graphes de connaissances.',
-    problem:
-      'Malgré des technologies robotiques avancées, la plateforme LIFE manquait de visibilité temps réel sur les données et positions des robots, freinant la coordination, le pilotage et la réactivité.',
-    architectureSummary:
-      'Architecture orientée services reliant le broker RabbitMQ (Producer/Consumer pour SCRAM), les simulations ROS/Gazebo et FlexSim, un moteur d’inférences et constructeur de scénarios, et une interface web ergonomique Python/Flask adossée à MongoDB.',
-    architectureLayers: [
+      'Exploration et prototypage d’un jumeau numérique reliant simulation robotique (ROS / Gazebo), messagerie asynchrone et supervision web pour la maintenance prédictive.',
+    context:
+      'Mené durant une mission de recherche de cinq mois à l’ICAM Grand Paris Sud (supervision : M. Paul-Eric Dossou) autour de la salle robotique expérimentale LIFE. Malgré des équipements avancés, la plateforme manquait d’une vue unifiée et en temps réel des données et positions des robots.',
+    objective:
+      'Prototyper un système complexe capable de capter les états issus des simulateurs robotiques, de les transporter sans blocage vers des services orientés API et de restituer des indicateurs exploitables pour le pilotage et la maintenance.',
+    role:
+      'Conception de l’architecture d’intégration et développement complet de la chaîne : intégration SCRAM sur RabbitMQ, passerelle ROS / Gazebo, API REST Python/Flask, stockage MongoDB, conteneurisation Docker et rédaction de documentation technique. Ces travaux ont nourri le chapitre publié chez Springer (FAIM 2025).',
+    architectureNote:
+      'Architecture orientée services et découplée par broker RabbitMQ (Producer / Consumer) afin de protéger la boucle temps réel des simulateurs tout en alimentant l’API Flask et MongoDB.',
+    diagramNodes: [
       {
-        layer: '01 · Broker & Simulation',
-        component: 'SCRAM via RabbitMQ + ROS / Gazebo',
-        detail: 'Intégration de SCRAM par messagerie asynchrone RabbitMQ (Producer/Consumer) et extraction des entités et positions depuis ROS et Gazebo.',
+        id: 'sim',
+        label: 'Simulateurs terrain',
+        sublabel: 'ROS · Gazebo · FlexSim',
+        emphasis: 'neutral',
       },
       {
-        layer: '02 · Coordination & Calcul',
-        component: 'API REST Flask & Moteur d’inférences',
-        detail: 'Module de coordination, capitalisation des connaissances, solveurs et constructeur de scénarios pour l’aide à la décision.',
+        id: 'broker',
+        label: 'Broker asynchrone',
+        sublabel: 'RabbitMQ (SCRAM · Producer/Consumer)',
+        emphasis: 'primary',
       },
       {
-        layer: '03 · Persistance & IHM',
-        component: 'MongoDB, Interface Web & Docker',
-        detail: 'Stockage des mesures et données de simulation, interface web responsive (tableaux de bord & KPI) et environnement reproductible Docker/Git.',
+        id: 'api',
+        label: 'Backend orienté services',
+        sublabel: 'Python Flask · API REST · Scénarios',
+        emphasis: 'secondary',
+      },
+      {
+        id: 'storage',
+        label: 'Données & Supervision',
+        sublabel: 'MongoDB · Tableau de bord web',
+        emphasis: 'neutral',
       },
     ],
-    technologies: ['Python', 'Flask', 'RabbitMQ', 'SCRAM', 'ROS', 'Gazebo', 'MongoDB', 'Docker', 'Git'],
-    role: 'Mission de recherche en 4e année d’ingénierie (supervision M. Paul-Eric Dossou) : intégration SCRAM/RabbitMQ, passerelle ROS/Gazebo, développement web Flask/MongoDB et co-écriture de l’article publié chez Springer (FAIM 2025).',
-    challenges: [
-      'Synchroniser en temps réel les positions et états issus des simulateurs ROS/Gazebo avec l’interface web de suivi.',
-      'Découpler les échanges de messages entre composants via le broker RabbitMQ pour préserver la fiabilité.',
-      'Rendre l’ensemble reproductible et documenté (Docker/Git) en appui aux projets analogues du laboratoire (SupplyChain, Valuator).',
-    ],
-    results: [
-      'Jumeau numérique fonctionnel de la salle LIFE offrant une vue temps réel des robots et des indicateurs de performance.',
-      'Travaux valorisés par un chapitre scientifique publié dans les actes de FAIM 2025 chez Springer Nature.',
-    ],
-    demoType: 'digital-twin',
-    repoUrl: 'https://github.com/boriska-mbilongo',
+    diagramFooter: 'Environnement reproductible Docker / Git avec documentation technique de reprise',
+    realisation:
+      'Mise en place des flux asynchrones RabbitMQ, extraction des positions et mesures depuis ROS/Gazebo, implémentation des routes REST Flask, persistance NoSQL dans MongoDB et interface web responsive dédiée aux scénarios et KPI.',
+    result:
+      'Jumeau numérique fonctionnel et reproductible pour les travaux de recherche du laboratoire, valorisé par une co-publication scientifique dans les actes de FAIM 2025 (Springer Nature).',
+    nextAndLearnings:
+      'Apprentissage concret du découplage événementiel entre simulation robotique et web, de la reproductibilité Docker et de l’écart entre modèles simulés et contraintes matérielles réelles.',
+    technologies: ['Python', 'Flask', 'ROS', 'Gazebo', 'RabbitMQ', 'SCRAM', 'MongoDB', 'Docker', 'Git'],
+    liveUrl:
+      'https://www.researchgate.net/publication/397657540_Towards_Sustainable_Digital_Transformation_in_SMEs_Integrating_IoT_Digital_Twins_and_AI_for_Enhanced_Manufacturing_Efficiency',
+    liveLabel: 'Publication ResearchGate',
   },
   {
-    id: 'sparte-biometric-pic',
-    title: 'Contrôle d’accès biométrique sur microcontrôleur PIC',
-    subtitle: 'Montage électronique et code embarqué C/C++',
-    category: 'Professionnel',
-    period: '05/2023 – 07/2023',
-    country: 'Cameroun',
-    context: 'Sparte Robotics · Douala, Cameroun',
-    domain: 'IoT & Embarqué',
+    id: 'track-sentry-vision',
+    index: '02',
+    shortTitle: 'Track Sentry Vision',
+    title: 'Track Sentry Vision – Surveillance ferroviaire Edge-to-Cloud',
+    categoryLabel: 'Ingénieure logicielle & TFE · UMONS (Mons, Belgique)',
+    period: '02/2026 – 07/2026',
     summary:
-      'Conception d’un dispositif de contrôle d’accès par empreinte digitale sur microcontrôleur PIC, du câblage matériel jusqu’au programme embarqué.',
-    problem:
-      'Faire fonctionner une lecture biométrique fiable et l’ouverture d’un accès directement sur un microcontrôleur aux ressources réduites, sans dépendre d’un ordinateur.',
-    architectureSummary:
-      'Un capteur d’empreintes relié en liaison série UART au microcontrôleur PIC programmé en C, qui pilote ensuite le mécanisme d’ouverture.',
-    architectureLayers: [
+      'Plateforme de surveillance ferroviaire intelligente combinant acquisition temps réel Edge-to-Cloud de capteurs multimodaux et modèles de vision par ordinateur pour défauts de rails et obstacles.',
+    context:
+      'Projet mené à l’Université de Mons (UMONS, Faculté Polytechnique). La surveillance des voies ferrées exige de capter en continu des signaux physiques hétérogènes au plus près de la voie tout en détectant par vision des défauts rares et des obstacles sous contrainte temps réel.',
+    objective:
+      'Concevoir une chaîne logicielle Edge-to-Cloud fiable reliant des capteurs multimodaux au Cloud, et valider des architectures de vision par ordinateur rapides et économes en annotations.',
+    role:
+      'Développement des modules logiciels Python dédiés à l’acquisition, à la synchronisation et à la transmission temps réel des données capteurs (vibrations, acoustique, température), et réalisation des expérimentations de vision par ordinateur (DualSightNet et RT-DETR avec Active Learning).',
+    architectureNote:
+      'Pipeline Edge-to-Cloud découplé reliant les capteurs terrain aux services Cloud conteneurisés (MQTT / Docker), complété par deux modules PyTorch d’analyse visuelle.',
+    diagramNodes: [
       {
-        layer: '01 · Capteur',
-        component: 'Module biométrique UART',
-        detail: 'Acquisition de l’empreinte et envoi des données sur port série.',
+        id: 'sensors',
+        label: 'Capteurs multimodaux',
+        sublabel: 'Vibrations · Acoustique · Température',
+        emphasis: 'neutral',
       },
       {
-        layer: '02 · Logique embarquée',
-        component: 'Microcontrôleur PIC (C/C++)',
-        detail: 'Enregistrement des profils, comparaison et gestion des délais d’ouverture.',
+        id: 'edge',
+        label: 'Collecte Edge Python',
+        sublabel: 'Synchronisation & traitement temps réel',
+        emphasis: 'primary',
       },
       {
-        layer: '03 · Commande',
-        component: 'Verrou et signaux',
-        detail: 'Déclenchement matériel et retour visuel/sonore immédiat pour l’utilisateur.',
+        id: 'cloud',
+        label: 'Transport & Cloud',
+        sublabel: 'Broker MQTT · Conteneurs Docker',
+        emphasis: 'secondary',
+      },
+      {
+        id: 'vision',
+        label: 'Vision & Diagnostic',
+        sublabel: 'DualSightNet · RT-DETR · Alertes',
+        emphasis: 'neutral',
       },
     ],
-    technologies: ['C', 'C++', 'Microcontrôleur PIC', 'Communication série', 'IoT'],
-    role: 'Stagiaire IoT et systèmes embarqués : câblage complet et écriture du programme embarqué.',
-    challenges: [
-      'Gérer la mémoire limitée du microcontrôleur et les délais de réponse du port série.',
-    ],
-    results: [
-      'Prototype complet de contrôle d’accès testé et validé sur carte réelle.',
-    ],
-    demoType: 'sparte-biometric',
-    repoUrl: 'https://github.com/boriska-mbilongo',
+    diagramFooter: 'Chaîne Edge-to-Cloud intégrée à Track Sentry Vision et validation expérimentale CUDA / PyTorch',
+    realisation:
+      'Écriture de composants Python modulaires pour ingérer, horodater et transmettre les signaux capteurs vers le Cloud, puis entraînement et évaluation par validation croisée de DualSightNet (défauts de surface du rail) et RT-DETR piloté par Active Learning.',
+    result:
+      'Chaîne Edge-to-Cloud opérationnelle intégrée à la plateforme de l’UMONS, associée à 98,0 % de Balanced Accuracy sur la classification des défauts de rails et 90,8 % mAP@50:95 à 55 FPS en détection d’obstacles tout en réduisant l’effort d’annotation.',
+    nextAndLearnings:
+      'Maîtrise de la synchronisation de flux capteurs hétérogènes sous contrainte temps réel, gestion des déséquilibres de classes extrêmes et analyse du décalage entre données synthétiques et images réelles de terrain.',
+    technologies: ['Python', 'Edge-to-Cloud', 'Capteurs multimodaux', 'MQTT', 'Docker', 'PyTorch', 'DualSightNet', 'RT-DETR'],
   },
   {
-    id: 'supply-chain-microservices',
-    title: 'SupplyChain : Analyse de performance GRAI & Multi-services Docker',
-    subtitle: 'Méthode GRAI, tableaux de bord KPI, FastAPI / Flask, PostgreSQL & MongoDB',
-    category: 'Académique',
+    id: 'eneo',
+    index: '03',
+    shortTitle: 'Mission ENEO DSI',
+    title: 'Mission ENEO DSI – Système de rapprochement des ventes',
+    categoryLabel: 'Stage Développement Full Stack (DISI / DASI · BSOF) · Douala',
+    period: '01/2024 – 03/2024',
+    summary:
+      'Application web métier Django / PostgreSQL pour automatiser le rapprochement des ventes multi-canaux, fiabiliser les contrôles et accélérer les déploiements via CI/CD.',
+    context:
+      'Stage au sein de la Direction de l’Innovation et des Systèmes d’Information (DISI / DASI, équipe BSOF) d’ENEO Cameroon. Les données de ventes (post-paiement, prépaiement, agences, portail web, Mobile Money) étaient rapprochées manuellement, générant lenteurs, fautes de saisie et absence de traçabilité.',
+    objective:
+      'Concevoir une application métier centralisée permettant d’importer, valider et rapprocher automatiquement les encaissements et factures tout en garantissant une piste d’audit complète.',
+    role:
+      'Analyse des besoins avec les équipes métier, modélisation UML (3 profils : Administrateur, Utilisateur standard, Partenaire) et Merise (MCD/MCT), développement de l’application Django / PostgreSQL, optimisation SQL et mise en place de pipelines CI/CD sous GitLab.',
+    architectureNote:
+      'Application modulaire Django structurée en quatre briques métier indépendantes, avec gestion fine des rôles utilisateurs et intégration continue GitLab CI/CD.',
+    diagramNodes: [
+      {
+        id: 'sources',
+        label: 'Flux CSV hétérogènes',
+        sublabel: 'Agences · Prépaiement · Mobile Money',
+        emphasis: 'neutral',
+      },
+      {
+        id: 'import',
+        label: 'Import & Validation',
+        sublabel: 'Mappage dynamique · Contrôles format',
+        emphasis: 'secondary',
+      },
+      {
+        id: 'engine',
+        label: 'Moteur Django',
+        sublabel: 'Rapprochement auto / assisté · Alertes',
+        emphasis: 'primary',
+      },
+      {
+        id: 'audit',
+        label: 'PostgreSQL & Audit',
+        sublabel: 'Piste d’audit · Exports CSV / PDF / Excel',
+        emphasis: 'neutral',
+      },
+    ],
+    diagramFooter: 'Gestion agile sous Jira Software et déploiements automatisés GitLab CI/CD',
+    realisation:
+      'Réalisation des quatre modules : import en masse et mappage CSV, moteur de rapprochement automatique et manuel assisté par lots, alertes sur anomalies ou doublons, et tableaux de bord avec exports et piste d’audit complète.',
+    result:
+      'Réduction de 80 % des erreurs de traitement grâce à l’automatisation des rapprochements, gain de 30 % sur le temps de déploiement (CI/CD) et amélioration de 15 % des performances applicatives.',
+    nextAndLearnings:
+      'Compréhension concrète des exigences d’une DSI critique : importance de la modélisation des données en amont, des tests de non-régression et de la traçabilité opérationnelle.',
+    technologies: ['Python', 'Django', 'PostgreSQL', 'UML', 'Merise', 'GitLab CI/CD', 'Jira'],
+  },
+  {
+    id: 'supply-chain',
+    index: '04',
+    shortTitle: 'Supply Chain',
+    title: 'Supply Chain – Analyse de performance GRAI & Multi-services',
+    categoryLabel: 'Projet d’architecture SI · ICAM Grand Paris Sud',
     period: '2024 – 2025',
-    country: 'France',
-    context: 'ICAM Grand Paris Sud · Projet analogue',
-    domain: 'Cloud, Logistique & Modélisation GRAI',
     summary:
-      'Application d’analyse et d’optimisation de la performance logistique basée sur la méthode GRAI (Graphes à Réseaux d’Activités Interconnectées), implémentée en architecture multi-services Python (FastAPI/Flask) avec PostgreSQL, MongoDB et Docker.',
-    problem:
-      'Évaluer les processus de la chaîne logistique, repérer les écarts de performance et connecter les indicateurs (KPI) aux systèmes existants (ERP, WMS) tout en garantissant l’intégrité des commandes (SQL) et la souplesse des événements (NoSQL).',
-    architectureSummary:
-      'Modélisation structurelle GRAI couplée à des conteneurs Docker : API FastAPI en entrée, logique métier Flask, tableau de bord d’indicateurs React et double stockage PostgreSQL / MongoDB.',
-    architectureLayers: [
+      'Outil d’analyse de performance logistique fondé sur la méthode GRAI, implémenté en architecture multi-services Python (FastAPI / Flask) avec SQL, NoSQL et Docker.',
+    context:
+      'Projet visant à évaluer les flux logistiques et centres de décision selon la méthode GRAI tout en préparant le raccordement des indicateurs de performance (KPI) à des progiciels existants (ERP / WMS).',
+    objective:
+      'Mettre en place une architecture claire séparant la validation des contrats d’API, le calcul des indicateurs décisionnels et le stockage hybride des données structurées et événementielles.',
+    role:
+      'Analyse des besoins et des flux logistiques, conception du modèle de données polyglotte (PostgreSQL + MongoDB), découpage des services FastAPI / Flask et orchestration des conteneurs avec Docker Compose.',
+    architectureNote:
+      'Séparation nette entre l’API d’entrée typée (FastAPI / OpenAPI) et la logique d’analyse GRAI (Flask), adossées à deux moteurs de persistance complémentaires.',
+    diagramNodes: [
       {
-        layer: '01 · Modèle GRAI & API',
-        component: 'FastAPI & Cartographie GRAI',
-        detail: 'Structuration des centres de décision, détection des écarts de performance et validation OpenAPI.',
+        id: 'ui',
+        label: 'Supervision KPI',
+        sublabel: 'Tableaux de bord React',
+        emphasis: 'neutral',
       },
       {
-        layer: '02 · Métier & Tableaux de bord',
-        component: 'Flask & React',
-        detail: 'Calcul des indicateurs clés de performance (KPI) logistiques et restitution visuelle interactive.',
+        id: 'gateway',
+        label: 'Passerelle API',
+        sublabel: 'FastAPI · Validation OpenAPI',
+        emphasis: 'primary',
       },
       {
-        layer: '03 · Persistance & ERP/WMS',
-        component: 'PostgreSQL + MongoDB + Docker Compose',
-        detail: 'Double stockage SQL/NoSQL et passerelle d’intégration ERP/WMS orchestrée sous Docker.',
+        id: 'core',
+        label: 'Service métier GRAI',
+        sublabel: 'Flask · Calcul d’écarts & KPI',
+        emphasis: 'secondary',
+      },
+      {
+        id: 'db',
+        label: 'Stockage hybride',
+        sublabel: 'PostgreSQL (SQL) + MongoDB (NoSQL)',
+        emphasis: 'neutral',
       },
     ],
-    technologies: ['Python', 'FastAPI', 'Flask', 'Méthode GRAI', 'PostgreSQL', 'MongoDB', 'Docker Compose', 'React'],
-    role: 'Conception de l’outil d’analyse basée sur GRAI à Grand Paris Sud, découpage des services Python et orchestration Docker Compose.',
-    challenges: [
-      'Traduire les grilles décisionnelles GRAI en indicateurs concrets et synchroniser SQL/NoSQL lors du suivi des flux.',
-    ],
-    results: [
-      'Plateforme conteneurisée intégrant modélisation GRAI, tableau de bord KPI et double persistance SQL/NoSQL.',
-    ],
-    demoType: 'supply-chain',
-    repoUrl: 'https://github.com/boriska-mbilongo',
+    diagramFooter: 'Orchestration multi-conteneurs Docker Compose · Connecteur ERP / WMS',
+    realisation:
+      'Développement des endpoints FastAPI documentés via OpenAPI, implémentation des calculs GRAI sous Flask, modélisation relationnelle des commandes (PostgreSQL) et stockage souple des traces d’événements (MongoDB).',
+    result:
+      'Plateforme conteneurisée reproductible permettant d’analyser les écarts décisionnels sur la chaîne logistique et de restituer des KPI consolidés.',
+    nextAndLearnings:
+      'Arbitrage pratique entre SQL et NoSQL selon la structure des données, maîtrise de Docker Compose en réseau interne et structuration propre des contrats d’API.',
+    technologies: ['Python', 'FastAPI', 'Flask', 'PostgreSQL', 'MongoDB', 'Docker Compose', 'React', 'Méthode GRAI'],
   },
   {
-    id: 'valuator-ugecam',
-    title: 'Valuator UGECAM : Évaluation des équipements médicaux',
-    subtitle: 'Recueil des retours employés & patients, accès par rôle et tableaux de bord',
-    category: 'Professionnel',
-    period: '2024 – 2025',
-    country: 'France',
-    context: 'UGECAM · Projet analogue ICAM Grand Paris Sud',
-    domain: 'Santé & Développement Applicatif',
-    summary:
-      'Outil d’évaluation conçu pour recueillir et analyser de manière standardisée, objective et éthique les appréciations des employés et des patients de l’UGECAM sur les équipements médicaux.',
-    problem:
-      'Les retours sur le matériel médical passaient par des supports hétérogènes, empêchant d’obtenir une vision consolidée par profil (employés vs patients) pour améliorer équipements et services.',
-    architectureSummary:
-      'Interface React offrant des formulaires adaptés et un accès différencié par rôle (employés ou patients), reliée à des services Java/Python et à des tableaux de bord de visualisation sur PostgreSQL.',
-    architectureLayers: [
-      {
-        layer: '01 · Accès par rôle',
-        component: 'Parcours Employés & Patients',
-        detail: 'Formulaires standardisés et accessibles avec séparation claire des droits selon le profil.',
-      },
-      {
-        layer: '02 · Traitement & Éthique',
-        component: 'Services Java / Python',
-        detail: 'Calcul objectif des indicateurs de satisfaction et consolidation multi-critères.',
-      },
-      {
-        layer: '03 · Visualisation',
-        component: 'Tableaux de bord & PostgreSQL',
-        detail: 'Synthèse des évaluations permettant d’orienter l’amélioration des équipements médicaux.',
-      },
-    ],
-    technologies: ['Java', 'Spring Boot', 'Python', 'React', 'PostgreSQL'],
-    role: 'Développement de l’application d’évaluation à Grand Paris Sud en lien avec le cahier des charges UGECAM (formulaires, accès rôle-spécifique, tableaux de bord).',
-    challenges: [
-      'Garantir des retours standardisés et éthiques tout en rendant les formulaires rapides à remplir pour les patients comme pour les équipes.',
-    ],
-    results: [
-      'Outil centralisé avec accès par rôle (employés / patients) et tableaux de bord de suivi des équipements.',
-    ],
-    demoType: 'ugecam',
-    repoUrl: 'https://github.com/boriska-mbilongo',
-  },
-  {
-    id: 'smart-home-access',
-    title: 'Smart Home Access : Contrôle d’accès IoT',
-    subtitle: 'Arduino / Raspberry Pi, MQTT, Node.js et React',
-    category: 'Académique',
+    id: 'smart-home',
+    index: '05',
+    shortTitle: 'Smart Home Access',
+    title: 'Smart Home Access – Contrôle d’accès IoT connecté',
+    categoryLabel: 'Projet académique IoT & Web · Cursus ingénieur',
     period: '2024',
-    country: 'France',
-    context: 'ICAM · Projet académique IoT & Web',
-    domain: 'IoT & Web',
     summary:
-      'Projet académique conçu pour ouvrir ou bloquer un accès à distance depuis un tableau de bord web relié à un Arduino et un Raspberry Pi via MQTT.',
-    problem:
-      'Mettre en place une chaîne complète reliant un lecteur physique léger, un serveur Node.js et une interface web capable de révoquer un badge en direct.',
-    architectureSummary:
-      'Le matériel publie chaque passage sur MQTT, le serveur Node.js/Express vérifie les droits et le tableau de bord React affiche le journal en direct.',
-    architectureLayers: [
+      'Chaîne IoT complète reliant lecteur matériel Arduino / Raspberry Pi, protocole MQTT, backend Node.js et tableau de bord React pour gérer des accès en direct.',
+    context:
+      'Projet académique conçu pour relier concrètement des composants matériels contraints à un système d’information web temps réel autour d’un parcours de contrôle d’accès par badge.',
+    objective:
+      'Assurer la vérification instantanée des autorisations lors du passage d’un badge physique, la révocation à distance depuis le web et la continuité de fonctionnement en cas d’aléa réseau.',
+    role:
+      'Conception de bout en bout du parcours d’accès : câblage et code embarqué sur Arduino / Raspberry Pi, configuration des échanges MQTT, développement du serveur Node.js/Express et de l’interface React.',
+    architectureNote:
+      'Architecture événementielle légère basée sur MQTT pour découpler les capteurs matériels de la logique de décision serveur et de l’interface de suivi.',
+    diagramNodes: [
       {
-        layer: '01 · Boîtier',
-        component: 'Arduino / Raspberry Pi',
-        detail: 'Lecture d’un identifiant et échange léger sur le protocole MQTT.',
+        id: 'hardware',
+        label: 'Boîtier d’accès',
+        sublabel: 'Lecteur · Arduino & Raspberry Pi',
+        emphasis: 'neutral',
       },
       {
-        layer: '02 · Serveur',
-        component: 'Node.js & Express',
-        detail: 'Vérification des autorisations et enregistrement de chaque passage.',
+        id: 'mqtt',
+        label: 'Protocole IoT',
+        sublabel: 'Broker MQTT (Topics badge / état)',
+        emphasis: 'primary',
       },
       {
-        layer: '03 · Suivi web',
-        component: 'React & Chart.js',
-        detail: 'Activation ou blocage d’un badge et historique clair des accès.',
+        id: 'server',
+        label: 'Serveur applicatif',
+        sublabel: 'Node.js & Express · Droits & logs',
+        emphasis: 'secondary',
+      },
+      {
+        id: 'dashboard',
+        label: 'Interface web',
+        sublabel: 'React & Chart.js · Révocation live',
+        emphasis: 'neutral',
       },
     ],
-    technologies: ['Node.js', 'Express', 'MQTT', 'Raspberry Pi', 'Arduino', 'React', 'Chart.js'],
-    role: 'Conception complète dans le cadre du cursus ingénieur, du câblage matériel jusqu’à l’interface React.',
-    challenges: [
-      'Gérer proprement les coupures temporaires de Wi-Fi entre le boîtier et le serveur.',
-    ],
-    results: [
-      'Prototype complet couvrant ajout de badge, vérification instantanée et historique.',
-    ],
-    demoType: 'smart-home',
-    repoUrl: 'https://github.com/boriska-mbilongo',
+    diagramFooter: 'Communication bidirectionnelle temps réel et historique des accès',
+    realisation:
+      'Lecture matérielle des identifiants sur Arduino, publication vers le Raspberry Pi et le broker MQTT, vérification des droits côté Node.js avec renvoi de commande d’ouverture, et tableau de bord React pour activer, bloquer et tracer les badges.',
+    result:
+      'Chaîne fonctionnelle validée de la présentation du badge physique jusqu’à la mise à jour instantanée du journal d’accès dans le navigateur.',
+    nextAndLearnings:
+      'Prise de conscience des contraintes de fiabilité propres à l’IoT : gestion des déconnexions Wi-Fi temporaires, file locale sur Raspberry Pi et validation stricte des messages avant actionnement.',
+    technologies: ['Arduino', 'Raspberry Pi', 'MQTT', 'Node.js', 'Express', 'React', 'Chart.js'],
   },
   {
-    id: 'wuendjo-travel',
-    title: 'Wuendjo : Organisation de voyage (groupe ou solo)',
-    subtitle: 'Application collaborative avec budget Recharts, suggestions, jeux de piste et guides visas',
-    category: 'Personnel',
-    period: 'Projet web en ligne',
-    country: 'France',
-    context: 'Wuendjo · Application collaborative de voyage',
-    domain: 'Application Web & Voyage',
+    id: 'jeffrey',
+    index: '06',
+    shortTitle: 'Jeffrey',
+    title: 'Jeffrey – Assistant personnel de productivité & d’organisation',
+    categoryLabel: 'Projet personnel · Automatisation & Backend',
+    period: 'Projet personnel',
     summary:
-      'Application collaborative d’organisation de voyages en groupe ou en solo incluant le suivi de budget (graphiques Recharts), des suggestions de destinations, activités et restaurants, des jeux de piste et des guides visas.',
-    problem:
-      'Préparer un voyage en groupe ou en solo demande de suivre à la fois le budget, les destinations, les activités, les formalités de visa et le programme commun sans tout éparpiller.',
-    architectureSummary:
-      'Application web interactive réunissant la planification de séjour (groupe ou solo), la visualisation budgétaire avec Recharts, les recommandations locales et les guides pratiques.',
-    architectureLayers: [
+      'Assistant personnel conçu pour centraliser mes tâches, rappels quotidiens, notes rapides et priorités techniques au sein d’une interface unifiée sans friction.',
+    context:
+      'En menant de front missions d’ingénierie, projets de recherche et engagements associatifs, la dispersion entre carnets, listes de tâches et agendas ralentissait le suivi quotidien des priorités.',
+    objective:
+      'Créer un outil personnel léger, rapide à interroger, capable d’enregistrer une consigne en langage direct, de structurer les rappels actifs et de conserver un historique clair sans multiplier les applications.',
+    role:
+      'Conception fonctionnelle, architecture de l’API REST, développement de la logique de traitement des commandes en Python / Node.js et réalisation de l’interface React épurée.',
+    architectureNote:
+      'Architecture simple et modulaire centrée sur une boucle rapide : saisie d’intention, normalisation via API REST, classement par priorité/échéance et stockage persistant des tâches.',
+    diagramNodes: [
       {
-        layer: '01 · Planification',
-        component: 'Mode Groupe & Mode Solo',
-        detail: 'Organisation collaborative des étapes, suggestions de destinations, activités et restaurants.',
+        id: 'input',
+        label: 'Interface de saisie',
+        sublabel: 'Web React · Commandes & notes',
+        emphasis: 'neutral',
       },
       {
-        layer: '02 · Budget & Données',
-        component: 'Suivi financier avec Recharts',
-        detail: 'Visualisation claire des dépenses du séjour et répartition par poste.',
+        id: 'parser',
+        label: 'Moteur de traitement',
+        sublabel: 'Python / Node.js · Routage d’actions',
+        emphasis: 'primary',
       },
       {
-        layer: '03 · Pratique & Ludique',
-        component: 'Guides visas & Jeux de piste',
-        detail: 'Repères administratifs par destination et parcours ludiques intégrés au séjour.',
+        id: 'api',
+        label: 'API REST & Rappels',
+        sublabel: 'Planification · Statuts & priorités',
+        emphasis: 'secondary',
+      },
+      {
+        id: 'memory',
+        label: 'Mémoire persistante',
+        sublabel: 'Base structurée · Historique & tâches',
+        emphasis: 'neutral',
       },
     ],
-    technologies: ['React', 'Recharts', 'JavaScript', 'Vercel'],
-    role: 'Conception et développement complet de l’application web Wuendjo déployée sur Vercel.',
-    challenges: [
-      'Réunir des usages très différents (budget, visas, suggestions, jeux de piste) dans une interface fluide.',
+    diagramFooter: 'Conçu pour une latence minimale et un usage quotidien sobre sans surcharge visuelle',
+    realisation:
+      'Développement d’un moteur de traitement des requêtes permettant d’ajouter, filtrer et clôturer des rappels ou notes techniques, adossé à une API REST légère et une interface web réactive.',
+    result:
+      'Assistant personnel opérationnel utilisé au quotidien pour centraliser mes engagements, échéances techniques et suivis de projets.',
+    nextAndLearnings:
+      'Ce projet a renforcé mon attention à la simplicité d’usage : un outil interne n’est adopté durablement que s’il réduit la friction de saisie. Prochaines évolutions : synchronisation calendrier et notifications ciblées.',
+    technologies: ['Python', 'Node.js', 'API REST', 'React', 'Automatisation'],
+  },
+  {
+    id: 'wuendjo',
+    index: '07',
+    shortTitle: 'Wuendjo',
+    title: 'Wuendjo – Organisation collaborative de voyage',
+    categoryLabel: 'Projet personnel · Application web en ligne',
+    period: 'Déployé sur Vercel',
+    summary:
+      'Application web collaborative pour préparer un voyage en groupe ou en solo : suivi de budget Recharts, suggestions locales, jeux de piste et guides visas.',
+    context:
+      'Organiser un voyage à plusieurs ou en autonomie oblige souvent à jongler entre feuilles de calcul budgétaires, notes d’itinéraires et recherches dispersées sur les formalités administratives.',
+    objective:
+      'Réunir dans un outil web unique les fonctionnalités réellement utiles à la préparation d’un séjour, utilisables sans inscription complexe ni courbe d’apprentissage.',
+    role:
+      'Conception produit, ergonomie responsive, développement front-end en React, intégration des graphiques financiers Recharts et déploiement continu sur Vercel.',
+    architectureNote:
+      'Application web monopage (SPA) modulaire construite en React, découpée par modules métier indépendants et hébergée en continu sur Vercel.',
+    diagramNodes: [
+      {
+        id: 'users',
+        label: 'Voyageurs',
+        sublabel: 'Parcours Groupe ou Solo',
+        emphasis: 'neutral',
+      },
+      {
+        id: 'modules',
+        label: 'Modules React',
+        sublabel: 'Itinéraire · Suggestions · Visas · Jeux',
+        emphasis: 'primary',
+      },
+      {
+        id: 'charts',
+        label: 'Suivi budgétaire',
+        sublabel: 'Graphiques Recharts par poste',
+        emphasis: 'secondary',
+      },
+      {
+        id: 'hosting',
+        label: 'Diffusion web',
+        sublabel: 'Build & déploiement Vercel',
+        emphasis: 'neutral',
+      },
     ],
-    results: [
-      'Application déployée en ligne couvrant la préparation complète de voyages de groupe et en solo.',
-    ],
-    demoType: 'wuendjo',
-    repoUrl: 'https://github.com/boriska-mbilongo',
+    diagramFooter: 'Application publique accessible en ligne sur ordinateur et mobile',
+    realisation:
+      'Développement des modules disponibles en ligne : planification de séjour solo ou collaboratif, visualisation budgétaire via Recharts, recommandations de destinations/activités/restaurants, guides visas et jeux de piste intégrés.',
+    result:
+      'Application déployée et accessible publiquement sur wuendjo.vercel.app, démontrant la capacité à livrer un produit web complet de l’idée à la mise en production.',
+    nextAndLearnings:
+      'Priorisation des fonctionnalités centrées sur l’usage réel. Prochaines étapes prévues : persistance multi-utilisateurs temps réel et partage synchronisé des dépenses entre participants.',
+    technologies: ['React', 'JavaScript', 'Recharts', 'Design responsive', 'Vercel'],
     liveUrl: 'https://wuendjo.vercel.app/',
     previewImage: '/assets/sites/wuendjo.png',
   },
   {
-    id: 'jeffrey-assistant',
-    title: 'Jeffrey : Mon assistant personnel',
-    subtitle: 'Outil quotidien pour centraliser rappels, tâches et organisation',
-    category: 'Personnel',
-    period: 'Projet personnel',
-    country: 'France',
-    context: 'Jeffrey · Assistant personnel sur mesure',
-    domain: 'Automatisation & Productivité',
+    id: 'mate-consulting',
+    index: '08',
+    shortTitle: 'MATE Consulting',
+    title: 'MATE Consulting – Site web de gestion financière externalisée',
+    categoryLabel: 'Projet web professionnel · Déployé sur Vercel',
+    period: 'En ligne',
     summary:
-      'Conception de Jeffrey, mon assistant personnel développé pour centraliser mes rappels, structurer mes priorités et fluidifier mon organisation quotidienne.',
-    problem:
-      'Entre les projets techniques, la recherche et la vie associative, j’avais besoin d’un outil personnel simple qui regroupe l’essentiel sans multiplier les applications.',
-    architectureSummary:
-      'Une interface directe reliée à un backend léger gérant les demandes du quotidien, les listes de tâches et les rappels.',
-    architectureLayers: [
+      'Site web responsive conçu pour présenter l’offre d’externalisation financière agile de MATE Consulting aux PME/TPE et simplifier la prise de rendez-vous.',
+    context:
+      'MATE Consulting accompagne des dirigeants de PME et TPE sur la précomptabilité, le suivi financier et les outils d’aide à la décision. Le cabinet souhaitait un support web clair, crédible et orienté conversion.',
+    objective:
+      'Structurer une interface lisible traduisant des prestations financières techniques en bénéfices concrets et permettant aux prospects de réserver directement un premier échange de 30 minutes.',
+    role:
+      'Conception de l’architecture éditoriale, design d’interface sobre centré sur la clarté client, développement front-end en React et déploiement continu sur Vercel.',
+    architectureNote:
+      'Application front-end React modulaire pensée mobile-first, structurant l’offre de précomptabilité, les outils d’aide à la décision et le tunnel direct de prise de contact.',
+    diagramNodes: [
       {
-        layer: '01 · Échange',
-        component: 'Interface directe',
-        detail: 'Saisie rapide d’un rappel, d’une note ou d’une priorité du jour.',
+        id: 'visitor',
+        label: 'Dirigeants PME / TPE',
+        sublabel: 'Navigation mobile & ordinateur',
+        emphasis: 'neutral',
       },
       {
-        layer: '02 · Traitement',
-        component: 'Logique Python / Node.js',
-        detail: 'Classement automatique des demandes et mise en forme des réponses.',
+        id: 'offer',
+        label: 'Vitrine React',
+        sublabel: 'Positionnement · Offre précomptabilité',
+        emphasis: 'primary',
       },
       {
-        layer: '03 · Suivi',
-        component: 'Mémoire des tâches',
-        detail: 'Conservation claire des rappels actifs et des tâches réalisées.',
-      },
-    ],
-    technologies: ['Python', 'Node.js', 'API REST', 'React'],
-    role: 'Conception et développement complet de mon assistant personnel selon mes habitudes de travail.',
-    challenges: [
-      'Rendre l’interaction suffisamment rapide et naturelle pour l’utiliser tous les jours.',
-    ],
-    results: [
-      'Assistant personnel opérationnel utilisé au quotidien pour centraliser tâches et rappels.',
-    ],
-    demoType: 'jeffrey',
-    repoUrl: 'https://github.com/boriska-mbilongo',
-  },
-  {
-    id: 'mateconsulting-web',
-    title: 'MATE Consulting : Gestion financière externalisée',
-    subtitle: 'Site web dédié aux PME/TPE : précomptabilité, outils d’aide à la décision et prise de rendez-vous',
-    category: 'Professionnel',
-    period: 'Projet web en ligne',
-    country: 'Cameroun',
-    context: 'MATE Consulting · Conseil & Gestion financière',
-    domain: 'Développement Web',
-    summary:
-      'Création du site web de MATE Consulting présentant l’externalisation de la gestion financière au format agile pour les PME et TPE, de la précomptabilité aux outils d’aide à la décision.',
-    problem:
-      'Présenter clairement une offre d’externalisation financière à destination des dirigeants de PME/TPE et permettre de réserver directement un échange de 30 minutes.',
-    architectureSummary:
-      'Site web responsive mettant en avant l’expertise de gestion financière externalisée, le détail des services et un appel direct à la prise de rendez-vous.',
-    architectureLayers: [
-      {
-        layer: '01 · Positionnement',
-        component: 'Offre PME / TPE',
-        detail: 'Présentation structurée des services de précomptabilité et de pilotage financier.',
+        id: 'tools',
+        label: 'Aide à la décision',
+        sublabel: 'Présentation des indicateurs & pilotage',
+        emphasis: 'secondary',
       },
       {
-        layer: '02 · Interface',
-        component: 'Front-end React responsive',
-        detail: 'Navigation fluide sur ordinateur et mobile avec hiérarchie de lecture claire.',
-      },
-      {
-        layer: '03 · Prise de contact',
-        component: 'Réservation d’échange (30 min)',
-        detail: 'Parcours direct permettant aux dirigeants de planifier un premier rendez-vous.',
+        id: 'cta',
+        label: 'Prise de contact',
+        sublabel: 'Réservation échange 30 min · Vercel',
+        emphasis: 'neutral',
       },
     ],
+    diagramFooter: 'Site web déployé en production sur mateconsulting-pi.vercel.app',
+    realisation:
+      'Intégration des pages et sections de présentation de l’externalisation financière, hiérarchisation claire des services (précomptabilité, tableaux de bord de pilotage) et mise en place du parcours vers la prise de rendez-vous.',
+    result:
+      'Site web en ligne sur mateconsulting-pi.vercel.app offrant une présentation structurée, rapide et accessible sur tous les formats d’écran.',
+    nextAndLearnings:
+      'Travail d’ergonomie axé sur la lisibilité d’une offre B2B technique. Prochaines évolutions envisageables : simulateur d’accompagnement comptable et calendrier de réservation intégré.',
     technologies: ['React', 'JavaScript', 'Responsive Design', 'Vercel'],
-    role: 'Conception et développement complet du site web de MATE Consulting déployé sur Vercel.',
-    challenges: [
-      'Rendre lisibles des services financiers techniques pour des dirigeants de PME et TPE.',
-    ],
-    results: [
-      'Site web en ligne présentant l’offre de gestion financière externalisée et la réservation d’échange.',
-    ],
-    demoType: 'mateconsulting',
-    repoUrl: 'https://github.com/boriska-mbilongo',
     liveUrl: 'https://mateconsulting-pi.vercel.app/',
     previewImage: '/assets/sites/mateconsulting.png',
   },
+];
+
+export const ARCHIVE_ROWS: ArchiveRowItem[] = [
   {
-    id: 'creative-glitch-mag',
-    title: 'GLITCH Magazine : Média web éditorial',
-    subtitle: 'Magazine numérique : volumes thématiques, journal, notes et courrier',
-    category: 'Personnel',
-    period: 'Projet web en ligne',
-    country: 'France',
-    context: 'GLITCH Magazine · Édition & Développement web',
-    domain: 'Média Web & Design Éditorial',
-    summary:
-      'Création de GLITCH, mon magazine web éditorial organisé en volumes thématiques, sommaires, articles de journal, notes et espace de confidences en ligne.',
-    problem:
-      'Imaginer un espace éditorial personnel qui sorte du blog classique et adopte les codes d’un vrai magazine imprimé sur le web.',
-    architectureSummary:
-      'Application web organisée autour des numéros (« Volumes »), d’un sommaire structuré, d’articles de fond et d’un mur de notes.',
-    architectureLayers: [
-      {
-        layer: '01 · Édition',
-        component: 'Volumes & Sommaires',
-        detail: 'Structuration par numéros et rubriques éditoriales (Système, Corps, Culture, Notes).',
-      },
-      {
-        layer: '02 · Journal',
-        component: 'Articles & Essais',
-        detail: 'Mise en page magazine dédiée à la lecture de textes personnels et critiques.',
-      },
-      {
-        layer: '03 · Interaction',
-        component: 'Courrier & Confidences',
-        detail: 'Espace permettant aux lecteurs d’écrire au magazine.',
-      },
-    ],
-    technologies: ['React', 'Next.js', 'CSS Éditorial', 'Vercel'],
-    role: 'Direction artistique, rédaction éditoriale et développement web complet du magazine.',
-    challenges: [
-      'Donner une vraie identité graphique de magazine papier à une application web rapide.',
-    ],
-    results: [
-      'Magazine web en ligne avec plusieurs volumes, articles de journal et notes publiées.',
-    ],
-    demoType: 'creative-glitch',
-    repoUrl: 'https://github.com/boriska-mbilongo',
+    id: 'sparte-pic',
+    index: 'A1',
+    title: 'Contrôle d’accès biométrique sur microcontrôleur PIC',
+    subtitle: 'Sparte Robotics (Douala, Cameroun) · Stage IoT & Embarqué',
+    context: 'Intégration matérielle et logicielle en C / C++ sur liaison série UART',
+    period: '05/2023 – 07/2023',
+    tags: ['C / C++', 'PIC', 'UART'],
+    detail:
+      'Montage électronique complet et écriture du firmware en C pour lire une empreinte biométrique sur port série et piloter le verrouillage directement depuis un microcontrôleur PIC.',
+  },
+  {
+    id: 'glitch-mag',
+    index: 'A2',
+    title: 'GLITCH Magazine',
+    subtitle: 'Projet éditorial personnel cité sur le CV',
+    context: 'Magazine web indépendant organisé par volumes, articles, notes et courrier',
+    period: 'En ligne · Vercel',
+    tags: ['React', 'Next.js', 'Édition'],
+    detail:
+      'Conception d’un magazine indépendant mêlant articles, réflexions et formats éditoriaux soignés sur le web.',
     liveUrl: 'https://creative-glitch.vercel.app/',
     previewImage: '/assets/sites/creative-glitch.png',
   },
   {
-    id: 'zone-groupe-app',
-    title: 'Zone Groupe : Boutique d’électronique & négociation directe',
-    subtitle: 'E-commerce : catalogue, négociation du prix en direct et commande WhatsApp',
-    category: 'Personnel',
-    period: 'Projet web en ligne',
-    country: 'Cameroun',
-    context: 'Zone Groupe · E-commerce & Négociation directe',
-    domain: 'E-commerce & Application Web',
-    summary:
-      'Conception et développement de la boutique en ligne Zone Groupe (« L’électronique au juste prix »), intégrant un catalogue, un panier et une négociation directe du tarif avec un assistant ou le gérant avant finalisation sur WhatsApp.',
-    problem:
-      'Adapter la vente en ligne d’électronique aux habitudes locales où les clients souhaitent négocier le juste prix et finaliser rapidement la commande par message direct.',
-    architectureSummary:
-      'Boutique web responsive réunissant navigation catalogue (« Nouveautés », « Boutique »), gestion du panier et parcours de négociation + commande directe sur WhatsApp.',
-    architectureLayers: [
-      {
-        layer: '01 · Catalogue & Panier',
-        component: 'Vitrine e-commerce React',
-        detail: 'Navigation directe entre nouveautés, fiches produits et panier.',
-      },
-      {
-        layer: '02 · Négociation directe',
-        component: 'Échange assistant ou gérant',
-        detail: 'Discussion du prix pour chaque article afin d’obtenir le juste tarif avant validation.',
-      },
-      {
-        layer: '03 · Finalisation',
-        component: 'Commande directe WhatsApp',
-        detail: 'Transmission simplifiée de la commande convenue vers le vendeur sur WhatsApp.',
-      },
-    ],
-    technologies: ['React', 'JavaScript', 'E-commerce', 'WhatsApp Flow', 'Vercel'],
-    role: 'Conception de l’expérience boutique et développement complet du site Zone Groupe déployé sur Vercel.',
-    challenges: [
-      'Intégrer une logique de négociation humaine et fluide directement dans un parcours e-commerce sobre.',
-    ],
-    results: [
-      'Boutique en ligne opérationnelle avec catalogue, panier et finalisation directe via WhatsApp.',
-    ],
-    demoType: 'zone-groupe',
-    repoUrl: 'https://github.com/boriska-mbilongo',
+    id: 'zone-groupe',
+    index: 'A3',
+    title: 'Zone Groupe',
+    subtitle: 'Boutique d’électronique & négociation directe WhatsApp',
+    context: 'Catalogue, panier et finalisation directe des commandes par messagerie',
+    period: 'En ligne · Vercel',
+    tags: ['React', 'E-commerce', 'Vercel'],
+    detail:
+      'Boutique en ligne adaptée aux habitudes d’achat locales, intégrant catalogue, panier et négociation directe du prix avant validation sur WhatsApp.',
     liveUrl: 'https://zone-groupe-sigma.vercel.app/',
     previewImage: '/assets/sites/zone-groupe.png',
   },
 ];
 
-export const SKILL_GROUPS: SkillGroup[] = [
+export const COMPETENCE_AXES: CompetenceAxis[] = [
   {
-    id: 'languages-backend',
-    title: 'Langages & Backend',
-    description:
-      'Développement d’API, scripts d’automatisation et applications métier robustes.',
-    items: [
-      { name: 'Python (Django, Flask, FastAPI, SQLAlchemy)', context: 'ENEO · ICAM · UMONS · Supply Chain' },
-      { name: 'PyTorch, Vision par ordinateur & Active Learning', context: 'UMONS (DualSightNet, RT-DETR, YOLOv8n)' },
-      { name: 'Java & Spring Boot', context: 'Applications métier · Valuator UGECAM' },
-      { name: 'JavaScript / Node.js / Express', context: 'Services web & passerelles IoT' },
-      { name: 'C / C++ / Bash', context: 'Microcontrôleurs PIC, Arduino & Linux' },
+    id: 'architecture-si',
+    index: '01',
+    title: 'Architecture & SI',
+    subtitle: 'Concevoir des systèmes logiciels modulaires, testés et maintenables.',
+    domains: [
+      {
+        label: 'Architecture applicative',
+        detail: 'Python (Django, Flask, FastAPI, SQLAlchemy), Java / Spring Boot, Node.js / Express, React',
+      },
+      {
+        label: 'API & intégration',
+        detail: 'API REST, contrats OpenAPI (Swagger), JSON, messagerie asynchrone (RabbitMQ), passerelles ERP / WMS',
+      },
+      {
+        label: 'Données',
+        detail: 'Modélisation relationnelle UML & Merise, PostgreSQL (SQL) et MongoDB (NoSQL)',
+      },
+      {
+        label: 'Cloud, tests & déploiement',
+        detail: 'Docker, Docker Compose, CI/CD GitLab, Git, Linux, tests unitaires (pytest, JUnit, Postman)',
+      },
     ],
   },
   {
-    id: 'iot-embedded',
-    title: 'IoT, Embarqué & Temps réel',
-    description:
-      'Récupération de données sur le terrain, communication série et remontée vers le Cloud.',
-    items: [
-      { name: 'Edge-to-Cloud & Capteurs multimodaux', context: 'UMONS (surveillance ferroviaire)' },
-      { name: 'Microcontrôleurs PIC, Arduino & Raspberry Pi', context: 'Sparte Robotics · Smart Home Access' },
-      { name: 'MQTT & Liaison série UART', context: 'Échanges temps réel matériel / serveur' },
-      { name: 'ROS & Gazebo', context: 'ICAM · Jumeaux numériques' },
+    id: 'iot-industrie',
+    index: '02',
+    title: 'IoT & industrie',
+    subtitle: 'Relier capteurs, automates et systèmes de supervision numériques.',
+    domains: [
+      {
+        label: 'Capteurs & embarqué',
+        detail: 'Capteurs multimodaux, microcontrôleurs PIC (C/C++), Arduino et Raspberry Pi',
+      },
+      {
+        label: 'Protocoles IoT & industriels',
+        detail: 'MQTT, communication série UART ; culture et intégration industrielle OPC UA et Modbus',
+      },
+      {
+        label: 'Edge & temps réel',
+        detail: 'Pipelines Python edge-to-cloud, traitement du signal, gestion des coupures et fiabilité terrain',
+      },
+      {
+        label: 'Supervision & jumeaux numériques',
+        detail: 'Couplage simulation ROS / Gazebo, SCRAM, suivi temps réel et tableaux de bord Chart.js / React',
+      },
     ],
   },
   {
-    id: 'data-frontend',
-    title: 'Données & Interfaces',
-    description:
-      'Stockage SQL/NoSQL adapté au besoin et écrans web sobres pour les utilisateurs.',
-    items: [
-      { name: 'PostgreSQL & SQL', context: 'ENEO · UGECAM · Supply Chain' },
-      { name: 'MongoDB (NoSQL)', context: 'ICAM (jumeau numérique) · Supply Chain' },
-      { name: 'React & Chart.js', context: 'Tableaux de bord et outils internes' },
-    ],
-  },
-  {
-    id: 'devops-quality',
-    title: 'Déploiement, Tests & Méthodes',
-    description:
-      'Conteneurisation, tests automatisés et travail en équipe.',
-    items: [
-      { name: 'Docker & Docker Compose', context: 'ICAM · UMONS · Supply Chain' },
-      { name: 'CI/CD, GitLab & Git', context: 'ENEO (-30 % temps de déploiement) · ICAM' },
-      { name: 'pytest, JUnit, Postman & OpenAPI', context: 'Tests et vérification des API' },
-      { name: 'Linux, Agile & Scrum', context: 'Environnements serveur et suivi de projet' },
+    id: 'transformation',
+    index: '03',
+    title: 'Transformation',
+    subtitle: 'Cadrer les besoins métier et coordonner l’intégration de bout en bout.',
+    domains: [
+      {
+        label: 'Analyse des besoins',
+        detail: 'Recueil terrain, formalisation des processus, cartographie GRAI et automatisation de workflows',
+      },
+      {
+        label: 'Cadrage & documentation',
+        detail: 'Spécifications fonctionnelles, modélisation des rôles utilisateurs et documentation technique',
+      },
+      {
+        label: 'Gestion de projet',
+        detail: 'Méthodes Agile et Scrum, suivi sous Jira Software, priorisation incrémentale des livrables',
+      },
+      {
+        label: 'Coordination',
+        detail: 'Interface entre équipes DSI, recherche et utilisateurs finaux (Français natif · Anglais TOEIC B2)',
+      },
     ],
   },
 ];
-
-export const EXPERIENCES: ExperienceItem[] = [
-  {
-    id: 'exp-minerve',
-    type: 'Professionnel',
-    country: 'Cameroun',
-    period: '06/2024 – 09/2026',
-    role: 'Consultante en transformation digitale (temps partiel)',
-    organization: 'MINERVE Share and Grow',
-    location: 'Cameroun',
-    focus: 'Digitalisation & automatisation des processus métier',
-    summary:
-      'Accompagnement à la transformation digitale et conception d’outils applicatifs sur mesure pour structurer et automatiser les workflows internes.',
-    deliverables: [
-      'Conception et développement d’applications web métier avec API REST et bases PostgreSQL.',
-      'Automatisation de tâches opérationnelles et préparation de solutions pour déploiement.',
-    ],
-    stack: ['Python', 'API REST', 'PostgreSQL', 'Automatisation'],
-  },
-  {
-    id: 'exp-umons-tfe',
-    type: 'Académique',
-    country: 'Belgique',
-    period: '2026 · Erasmus',
-    role: 'Master Ingénieur Civil en Informatique & Gestion : Track Sentry Vision (TFE)',
-    organization: 'UMONS · Faculté Polytechnique (Polytech Mons)',
-    location: 'Mons, Belgique',
-    focus: 'Track Sentry Vision · Surveillance ferroviaire par Deep Learning (DualSightNet & RT-DETR)',
-    summary:
-      'Travail de Fin d’Études mené à Mons sous la direction du Prof. Saïd Mahmoudi et Tanguy Vansnick sur le projet de surveillance ferroviaire Track Sentry Vision : classification des défauts de surface du rail et détection d’obstacles temps réel.',
-    deliverables: [
-      'DualSightNet (ResNet50 + Swin-Tiny + fusion ECA / gate) : 98,0 % Balanced Accuracy sur RailSurface-7 (8 classes), +23,8 pts F1 sur Joints et +23,6 pts sur Grooves.',
-      'RT-DETR + Active Learning (Diversity Sampling K-Means) : 90,8 % mAP@50:95 en 6 itérations (1 050 images) à 55 FPS, réduisant de 30 à 40 % l’effort d’annotation.',
-      'Analyse croisée vues frontale/verticale, études d’ablation et caractérisation du reality gap synthétique → réel.',
-    ],
-    stack: ['Python', 'PyTorch 2.0', 'CUDA', 'ResNet50', 'Swin-Tiny', 'RT-DETR', 'Active Learning'],
-  },
-  {
-    id: 'exp-umons',
-    type: 'Professionnel',
-    country: 'Belgique',
-    period: '02/2026 – 07/2026',
-    role: 'Ingénieure logicielle : Track Sentry Vision (Edge-to-Cloud)',
-    organization: 'UMONS (Université de Mons)',
-    location: 'Mons, Belgique',
-    focus: 'Track Sentry Vision · Surveillance ferroviaire Edge-to-Cloud temps réel',
-    summary:
-      'Développement des modules logiciels Python de la plateforme de surveillance ferroviaire Track Sentry Vision, du terrain (capteurs multimodaux) jusqu’au Cloud.',
-    deliverables: [
-      'Intégration de capteurs multimodaux (vibrations, acoustique, température) et prise en charge de leur transmission temps réel.',
-      'Écriture de composants Python modulaires pour synchroniser, traiter et analyser les signaux capteurs.',
-    ],
-    stack: ['Python', 'Edge-to-Cloud', 'Capteurs multimodaux', 'Temps réel', 'MQTT', 'Docker'],
-  },
-  {
-    id: 'exp-icam-research',
-    type: 'Académique',
-    country: 'France',
-    period: '09/2024 – 02/2025',
-    role: 'Ingénieure de recherche : Jumeau numérique (Salle LIFE) & Projets associés',
-    organization: 'ICAM (Institut Catholique d’Arts et Métiers)',
-    location: 'Grand Paris Sud, France',
-    focus: 'Salle LIFE (SCRAM, RabbitMQ, ROS/Gazebo, Flask, MongoDB) · SupplyChain (GRAI) · Valuator (UGECAM)',
-    summary:
-      'Mission scientifique de recherche de 5 mois à l’ICAM Grand Paris Sud Europe (supervision M. Paul-Eric Dossou) : conception et implémentation du jumeau numérique de la plateforme robotique LIFE, ainsi que des applications analogues SupplyChain et Valuator.',
-    deliverables: [
-      'Jumeau numérique de la salle LIFE : intégration de SCRAM via RabbitMQ (Producer/Consumer), interfaçage ROS/Gazebo & FlexSim, API Python/Flask, MongoDB, moteur d’inférences et tableaux de bord temps réel.',
-      'SupplyChain (méthode GRAI) : outil d’analyse de performance logistique multi-services (FastAPI, Flask, PostgreSQL/MongoDB, Docker) avec indicateurs KPI et intégration ERP/WMS.',
-      'Valuator (UGECAM) : application d’évaluation des équipements médicaux avec accès par rôle (employés / patients), formulaires standardisés et tableaux de bord de suivi.',
-      'Reproductibilité Git/Docker, documentation technique et co-écriture d’un chapitre scientifique publié chez Springer Nature (FAIM 2025).',
-    ],
-    stack: ['Python', 'Flask', 'RabbitMQ', 'ROS', 'Gazebo', 'MongoDB', 'PostgreSQL', 'Docker', 'Git'],
-  },
-  {
-    id: 'exp-eneo',
-    type: 'Professionnel',
-    country: 'Cameroun',
-    period: '01/2024 – 03/2024',
-    role: 'Développeuse full stack (DISI / DASI · BSOF)',
-    organization: 'ENEO Cameroon',
-    location: 'Douala, Cameroun',
-    focus: 'Application de réconciliation des ventes en 4 modules (Django, PostgreSQL, UML/Merise, CI/CD)',
-    summary:
-      'Stage au sein de la Direction de l’Innovation et des Systèmes d’Information (DISI / DASI, équipe BSOF) : conception et réalisation d’une application de réconciliation des ventes sous Jira Software, modélisée en UML et Merise.',
-    deliverables: [
-      'Architecture en 4 modules : importation CSV avec mappage/contrôle, rapprochement automatique & assisté par lots, alertes sur anomalies/doublons et rapports avec piste d’audit.',
-      'Gestion de 3 profils d’utilisation (Administrateur, Utilisateur standard, Partenaire) et automatisation des rapprochements (-80 % d’erreurs de traitement).',
-      'Pipelines CI/CD sous GitLab et optimisation des requêtes PostgreSQL (-30 % de temps de déploiement, +15 % de performances).',
-    ],
-    stack: ['Python', 'Django', 'PostgreSQL', 'UML', 'Merise', 'Jira', 'CI/CD', 'GitLab'],
-  },
-  {
-    id: 'exp-sparte',
-    type: 'Professionnel',
-    country: 'Cameroun',
-    period: '05/2023 – 07/2023',
-    role: 'Stagiaire IoT et systèmes embarqués',
-    organization: 'Sparte Robotics',
-    location: 'Douala, Cameroun',
-    focus: 'Contrôle d’accès biométrique sur microcontrôleur PIC',
-    summary:
-      'Réalisation d’un système d’accès biométrique sur microcontrôleur PIC, entre montage électronique et programmation C.',
-    deliverables: [
-      'Câblage du capteur biométrique sur microcontrôleur PIC et tests de fonctionnement complets.',
-    ],
-    stack: ['Microcontrôleur PIC', 'C / C++', 'Communication série', 'IoT'],
-  },
-  {
-    id: 'exp-ucac-icam',
-    type: 'Académique',
-    country: 'France',
-    period: '2021 – 2026',
-    role: 'Diplôme d’ingénieur en informatique et management des systèmes d’information (Titre CTI)',
-    organization: 'UCAC-ICAM',
-    location: 'Douala, Cameroun & Grand Paris Sud, France',
-    focus: 'Génie logiciel, Architectures distribuées, IoT, Réseaux & Management SI',
-    summary:
-      'Cycle ingénieur de 5 ans reconnu par la CTI, débuté à Douala puis poursuivi en France à l’ICAM Grand Paris Sud avant une mobilité Erasmus à l’UMONS (Belgique).',
-    deliverables: [
-      'Conception logicielle et architectures distribuées : réalisation de la plateforme Supply Chain multi-services (FastAPI, Flask, React, PostgreSQL + MongoDB, Docker Compose).',
-      'Systèmes d’information & qualité : modélisation relationnelle SQL / NoSQL, tests automatisés (pytest, JUnit, Postman, OpenAPI) et conduite de projets en Agile / Scrum.',
-      'Réseaux, Linux & systèmes connectés : administration Linux, protocoles séries / MQTT et obtention de la certification Cisco CCNA durant le cursus.',
-      'Recherche appliquée & valorisation scientifique : semestre de recherche à l’ICAM Grand Paris Sud et publication d’un chapitre chez Springer (FAIM 2025).',
-    ],
-    stack: ['Python', 'FastAPI', 'Flask', 'Java', 'Spring Boot', 'React', 'PostgreSQL', 'MongoDB', 'Docker', 'Agile / Scrum'],
-  },
-];
-
-export const PUBLICATION = {
-  title:
-    'Towards Sustainable Digital Transformation in SMEs: Integrating IoT, Digital Twins, and AI for Enhanced Manufacturing Efficiency',
-  frenchSubtitle:
-    'Vers une transformation numérique durable des PME : intégration de l’IoT, des jumeaux numériques et de l’IA pour l’efficience industrielle',
-  authors: 'Zeina Elrawashdeh, Paul-Eric Dossou & Boriska Mbilongo',
-  venue: 'Actes de FAIM 2025 (Flexible Automation and Intelligent Manufacturing)',
-  publisher: 'Springer Nature Switzerland (2025)',
-  institution: 'ICAM Grand Paris Sud',
-  abstract:
-    'Publié dans les actes de la conférence internationale FAIM 2025 chez Springer, ce chapitre examine comment les PME industrielles peuvent associer capteurs IoT, jumeaux numériques et intelligence artificielle pour anticiper les pannes et gagner en sobriété.',
-  axes: [
-    {
-      title: '01. Capter les données au plus près des machines',
-      content:
-        'Récupérer les mesures utiles sur des équipements déjà en place, sans bloquer la ligne de production.',
-    },
-    {
-      title: '02. Construire un jumeau numérique modulaire',
-      content:
-        'Connecter les mesures réelles ou simulées à des services web simples (Flask, API REST, MongoDB, Docker) pour suivre l’état des machines.',
-    },
-    {
-      title: '03. Rendre la maintenance prédictive accessible aux PME',
-      content:
-        'Limiter les arrêts imprévus et mieux utiliser les ressources grâce à des outils adaptés à la taille des PME.',
-    },
-  ],
-  bibtex: `@incollection{elrawashdeh2025towards,
-  author    = {Elrawashdeh, Zeina and Dossou, Paul-Eric and Mbilongo, Boriska},
-  title     = {Towards Sustainable Digital Transformation in SMEs: Integrating IoT, Digital Twins, and AI for Enhanced Manufacturing Efficiency},
-  booktitle = {Flexible Automation and Intelligent Manufacturing (FAIM 2025)},
-  publisher = {Springer Nature Switzerland},
-  year      = {2025}
-}`,
-};
-
-export const CERTIFICATIONS: CertificationItem[] = [
-  {
-    name: 'CCNA : Cisco Certified Network Associate',
-    issuer: 'Cisco Networking Academy',
-    date: 'Février 2023',
-  },
-  {
-    name: 'Internet of Things Fundamentals (IoT)',
-    issuer: 'Udemy',
-    date: 'Février 2024',
-  },
-  {
-    name: 'TOEIC : Anglais B2 (niveau professionnel)',
-    issuer: 'ETS (Educational Testing Service)',
-    date: 'Février 2024',
-  },
-];
-
-export const ENGAGEMENTS: EngagementItem[] = [
-  {
-    id: 'girls-in-ict',
-    category: 'Transmission & Mentorat',
-    title: 'Intervenante · Girls in ICT Day',
-    context: 'Institut français du Cameroun, Douala · 27 avril 2024',
-    detail:
-      'Échanges avec des lycéennes et étudiantes autour des métiers du numérique, du code et de l’ingénierie.',
-  },
-  {
-    id: 'you-give',
-    category: 'Engagement associatif',
-    title: 'You Give : « Un Cartable, Un Sourire »',
-    context: 'Édition 2026 · 400 000 FCFA collectés',
-    detail:
-      'Communication et collecte de fonds ayant permis d’offrir du matériel scolaire à 22 enfants pour la rentrée.',
-  },
-  {
-    id: 'horty-carriere-solidaire',
-    category: 'Engagement social',
-    title: 'Horty Carrière Solidaire',
-    context: 'Membre · Engagement social et solidaire',
-    detail:
-      'Participation aux initiatives solidaires et d’accompagnement portées par Horty Carrière Solidaire.',
-  },
-  {
-    id: 'comm-digital',
-    category: 'Communication digitale',
-    title: 'Likabo · Djine Care · Linnov',
-    context: 'Création de contenus & animation de communautés',
-    detail:
-      'Coup de main sur la création de contenus et la mise en avant de projets locaux en ligne.',
-  },
-];
-
-export const SERVICES: ServiceItem[] = [
-  {
-    number: '01',
-    title: 'Développement web & API backend',
-    summary:
-      'Création d’applications métier et d’API REST en Python (Django, Flask, FastAPI), Java / Spring Boot ou Node.js, avec bases PostgreSQL / MongoDB et interfaces React.',
-    reference: 'ENEO (réconciliation des ventes) · Valuator UGECAM · MATE Consulting · Wuendjo · GLITCH · Zone Groupe',
-  },
-  {
-    number: '02',
-    title: 'IoT, Embarqué & Edge-to-Cloud',
-    summary:
-      'Intégration de capteurs sur microcontrôleurs (PIC, Arduino, Raspberry Pi), liaison série / MQTT et traitement temps réel de données terrain vers le Cloud.',
-    reference: 'UMONS · Sparte Robotics · Smart Home Access',
-  },
-  {
-    number: '03',
-    title: 'Docker, CI/CD & Jumeaux numériques',
-    summary:
-      'Conteneurisation d’environnements avec Docker Compose, mise en place de pipelines CI/CD GitLab, tests automatisés et ponts applicatifs pour jumeaux numériques (ROS / Gazebo).',
-    reference: 'ENEO (-30 % déploiement) · ICAM Grand Paris Sud',
-  },
-  {
-    number: '04',
-    title: 'Digitalisation & Outils de suivi métier',
-    summary:
-      'Recueil du besoin sur le terrain, automatisation des contrôles et conception de plateformes de suivi prêtes pour les équipes opérationnelles.',
-    reference: 'MINERVE Share and Grow · Automatisation métier',
-  },
-];
-
